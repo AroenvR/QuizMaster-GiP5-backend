@@ -1,4 +1,4 @@
-package be.ucll.quizmaster.quizmaster.api;
+package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.service.TopicService;
 import org.slf4j.Logger;

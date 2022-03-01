@@ -1,6 +1,9 @@
 package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
+import java.util.Set;
+
+@SuppressWarnings("JpaDataSourceORMInspection")
 
 @Entity
 @Table(name = "topic", schema = "quiz_master")
@@ -9,55 +12,54 @@ public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
-    private long topic_id;
+    private long topicId;
 
     @Column(name = "name")
     private String name;
 
+    @OneToMany(mappedBy = "topic")
+    private Set<Question> questions;
+
+    //constructors
     public Topic() {
     }
 
-    private Topic(Builder builder) {
-        setTopic_id(builder.topic_id);
-        setName(builder.name);
+    public Topic(String name) {
+        this.name = name;
     }
 
-    public long getTopic_id() {
-        return topic_id;
+    public long getTopicId() {
+        return topicId;
     }
 
-    public void setTopic_id(long topic_id) {
-        this.topic_id = topic_id;
+    private void setTopicId(long topicId) {
+        this.topicId = topicId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Topic)) return false;
 
-    public static final class Builder {
-        private long topic_id;
-        private String name;
+        Topic topic = (Topic) o;
 
-        public Builder() {
-        }
+        if (getTopicId() != topic.getTopicId()) return false;
+        return getName().equals(topic.getName());
+    }
 
-        public Builder topic_id(long val) {
-            topic_id = val;
-            return this;
-        }
-
-        public Builder name(String val) {
-            name = val;
-            return this;
-        }
-
-        public Topic build() {
-            return new Topic(this);
-        }
+    @Override
+    public String toString() {
+        return "Topic{" +
+                "topicId=" + topicId +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

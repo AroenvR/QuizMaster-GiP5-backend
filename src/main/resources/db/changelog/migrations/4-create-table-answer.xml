@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="4" author="woutb">
+
+        <!-- answer -->
+        <createTable tableName="answer" schemaName="quiz_master">
+            <column name="answer_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="question_id" type="BIGSERIAL">
+                <constraints nullable="false" foreignKeyName="fk_answer_question" references="quiz_master.question(question_id)"/>
+            </column>
+
+            <column name="correct" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="answer_string" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

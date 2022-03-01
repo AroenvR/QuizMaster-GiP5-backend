@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="3" author="woutb">
+
+        <!-- answer -->
+        <createTable tableName="question" schemaName="quiz_master">
+
+            <column name="question_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="question_string" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="topic_id" type="BIGSERIAL">
+                <constraints nullable="false" foreignKeyName="fk_question_topic" references="quiz_master.topic(topic_id)"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
