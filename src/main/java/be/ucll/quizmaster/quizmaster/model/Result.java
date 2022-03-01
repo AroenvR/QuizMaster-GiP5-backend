@@ -3,7 +3,6 @@ package be.ucll.quizmaster.quizmaster.model;
 import javax.persistence.*;
 import java.util.Date;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "result", schema = "quiz_master")
 public class Result {

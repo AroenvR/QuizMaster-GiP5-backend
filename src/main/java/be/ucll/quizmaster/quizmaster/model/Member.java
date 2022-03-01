@@ -2,7 +2,6 @@ package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
 import java.util.UUID;
-@SuppressWarnings("JpaDataSourceORMInspection")
 
 @Entity
 @Table(name = "member", schema = "quiz_master")

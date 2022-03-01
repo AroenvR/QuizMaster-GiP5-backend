@@ -6,10 +6,31 @@
 
     <changeSet id="6" author="woutb">
 
-        <!-- answer -->
-        <createTable tableName="" schemaName="quiz_master">
-            <column name="" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
+        <!-- quiz -->
+        <createTable tableName="quiz" schemaName="quiz_master">
+
+            <column name="quiz_id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="host_id" type="uuid">
+                <constraints foreignKeyName="fk_quiz_host" references="quiz_master.member(member_id)"/>
+            </column>
+
+            <column name="title" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="code" type="CHAR(8)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="start_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="end_time" type="datetime">
+                <constraints nullable="false"/>
             </column>
 
         </createTable>

@@ -9,10 +9,11 @@
     <include file="db/changelog/migrations/2-create-topic.xml"/>
     <include file="db/changelog/migrations/3-create-table-question.xml"/>
     <include file="db/changelog/migrations/4-create-table-answer.xml"/>
-<!--    <include file="db/changelog/migrations/5-create-table-quiz-question.xml"/>-->
-<!--    <include file="db/changelog/migrations/6-create-table-quiz.xml"/>-->
-<!--    <include file="db/changelog/migrations/7-create-table-result.xml"/>-->
-<!--    <include file="db/changelog/migrations/8-create-table-participant.xml"/>-->
-<!--    <include file="db/changelog/migrations/9-create-table-member.xml"/>-->
+    <include file="db/changelog/migrations/5-create-table-member.xml"/>
+    <include file="db/changelog/migrations/6-create-table-quiz.xml"/>
+    <include file="db/changelog/migrations/7-create-table-participant.xml"/>
+    <include file="db/changelog/migrations/8-create-table-quiz-question.xml"/>
+    <include file="db/changelog/migrations/9-create-table-result.xml"/>
+    <include file="db/changelog/migrations/10-relatie-member-question.xml"/>
 
 </databaseChangeLog>

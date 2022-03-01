@@ -4,15 +4,13 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="9" author="woutb">
+    <changeSet id="10" author="woutb">
 
-        <!-- answer -->
-        <createTable tableName="" schemaName="quiz_master">
-            <column name="" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
+        <addColumn tableName="question" schemaName="quiz_master">
+            <column name="member_id" type="uuid">
+                <constraints foreignKeyName="fk_question_member" references="quiz_master.member(member_id)"/>
             </column>
-
-        </createTable>
+        </addColumn>
 
     </changeSet>
 

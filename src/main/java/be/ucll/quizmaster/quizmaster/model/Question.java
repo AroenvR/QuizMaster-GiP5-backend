@@ -3,7 +3,6 @@ package be.ucll.quizmaster.quizmaster.model;
 import javax.persistence.*;
 import java.util.Set;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
 
 @Entity
 @Table(name = "question", schema = "quiz_master")
@@ -37,13 +36,72 @@ public class Question {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    //Constructors
+    private Question(Builder builder) {
+        questionString = builder.questionString;
+        type = builder.type;
+        description = builder.description;
+        answers = builder.answers;
+        topic = builder.topic;
+        member = builder.member;
+    }
 
+    public Question() {
 
+    }
 
+    public static final class Builder {
+        private String questionString;
+        private int type;
+        private String description;
+        private Set<Answer> answers;
+        private Topic topic;
+        private Member member;
+
+        public Builder() {
+        }
+
+        public Builder questionString(String val) {
+            questionString = val;
+            return this;
+        }
+
+        public Builder type(int val) {
+            type = val;
+            return this;
+        }
+
+        public Builder description(String val) {
+            description = val;
+            return this;
+        }
+
+        public Builder answers(Set<Answer> val) {
+            answers = val;
+            return this;
+        }
+
+        public Builder topic(Topic val) {
+            topic = val;
+            return this;
+        }
+
+        public Builder member(Member val) {
+            member = val;
+            return this;
+        }
+
+        public Question build() {
+            return new Question(this);
+        }
+    }
 
     //TODO: add as extra later
     //@Column(name = "requested")
     //private boolean isRequested;
+
+
+    //Constructors
 
 
 

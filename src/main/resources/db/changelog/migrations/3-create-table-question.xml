@@ -6,7 +6,7 @@
 
     <changeSet id="3" author="woutb">
 
-        <!-- answer -->
+        <!-- question -->
         <createTable tableName="question" schemaName="quiz_master">
 
             <column name="question_id" type="BIGSERIAL" autoIncrement="true">

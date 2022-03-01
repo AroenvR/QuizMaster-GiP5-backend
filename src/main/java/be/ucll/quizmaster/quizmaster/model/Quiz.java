@@ -3,8 +3,6 @@ package be.ucll.quizmaster.quizmaster.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
-@SuppressWarnings("JpaDataSourceORMInspection")
 
 @Entity
 @Table(name = "quiz", schema = "quiz_master")
