@@ -21,24 +21,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MemberUserDetailService memberUserDetailService;
 
-/*
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.httpBasic().and().authorizeRequests()
-                .anyRequest().permitAll();
-    }
+    /*
+        @Override
+        protected void configure(HttpSecurity httpSecurity) throws Exception {
+            httpSecurity.httpBasic().and().authorizeRequests()
+                    .anyRequest().permitAll();
+        }
+
+        protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+            auth.authenticationProvider(authProvider());
+        }
+    */
 
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider());
-    }
-*/
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("user1").password(passwordEncoder().encode("user1Pass")).roles("USER")
+                .withUser("Aroen").password(passwordEncoder().encode("THIS")).roles("USER")
                 .and()
-                .withUser("user2").password(passwordEncoder().encode("user2Pass")).roles("USER")
+                .withUser("Oderick").password(passwordEncoder().encode("IS")).roles("USER")
                 .and()
-                .withUser("admin").password(passwordEncoder().encode("adminPass")).roles("ADMIN");
+                .withUser("Yvo").password(passwordEncoder().encode("TOP")).roles("USER")
+                .and()
+                .withUser("Ates").password(passwordEncoder().encode("TIER")).roles("USER")
+                .and()
+                .withUser("Wout").password(passwordEncoder().encode("SECURITY")).roles("USER");
     }
 
     @Bean
