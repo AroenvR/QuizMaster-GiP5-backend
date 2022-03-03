@@ -8,14 +8,16 @@ import java.util.UUID;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private UUID memberId;
 
+    @Column(name = "email")
     private String emailAddress;
 
+    @Column(name = "username")
     private String username;
 
+    @Column(name = "password")
     private String password;
 
     //constructors

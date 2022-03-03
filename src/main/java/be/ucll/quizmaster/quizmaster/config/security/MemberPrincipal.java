@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class MemberPrincipal implements UserDetails {
 
@@ -23,16 +24,20 @@ public class MemberPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         logger.warn("getting authorities for " + member.getEmailAddress());
-        return null;
+        return new HashSet<>();
     }
 
     @Override
     public String getPassword() {
-        return passwordEncoder.encode(member.getPassword());
+        logger.warn("getting password for " + member.getEmailAddress());
+        String encode = passwordEncoder.encode(member.getPassword());
+        logger.warn("encoded password = " + encode);
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
+        logger.warn("getting password for " + member.getEmailAddress());
         return member.getUsername();
     }
 
