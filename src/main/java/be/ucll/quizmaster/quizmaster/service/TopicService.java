@@ -27,5 +27,10 @@ public class TopicService {
         return topicRepo.getByName(topic);
 
     }
+
+    public void saveTopic(Topic topic) {
+
+        topicRepo.save(topic);
+    }
 }
 

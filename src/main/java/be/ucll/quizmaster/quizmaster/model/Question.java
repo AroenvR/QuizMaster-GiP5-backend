@@ -1,6 +1,9 @@
 package be.ucll.quizmaster.quizmaster.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -22,7 +25,7 @@ public class Question {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private Set<Answer> answers;
 
     @OneToMany(mappedBy = "question")
@@ -41,7 +44,7 @@ public class Question {
         questionString = builder.questionString;
         type = builder.type;
         description = builder.description;
-        answers = builder.answers;
+        answers = new HashSet<>();
         topic = builder.topic;
         member = builder.member;
     }
@@ -55,7 +58,6 @@ public class Question {
         private String questionString;
         private int type;
         private String description;
-        private Set<Answer> answers;
         private Topic topic;
         private Member member;
 
@@ -74,11 +76,6 @@ public class Question {
 
         public Builder description(String val) {
             description = val;
-            return this;
-        }
-
-        public Builder answers(Set<Answer> val) {
-            answers = val;
             return this;
         }
 
@@ -163,7 +160,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" +
+        return "\nQuestion{" +
                 "questionId=" + questionId +
                 ", questionString='" + questionString + '\'' +
                 ", type=" + type +
@@ -171,8 +168,8 @@ public class Question {
                 ", answers=" + answers +
                 ", quizQuestions=" + quizQuestions +
                 ", topic=" + topic +
-                ", member=" + member +
-                '}';
+                ", member=" + member.getEmailAddress() +
+                "}\n";
     }
 
     //TODO: add as extra later

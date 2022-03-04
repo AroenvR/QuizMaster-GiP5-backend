@@ -51,8 +51,11 @@ public class QuestionService {
         Topic topic;
         if (topicService.topicExists(dto.getTopic())) {
             topic = topicService.getTopic(dto.getTopic());
+            logger.debug("topic " + dto.getTopic() + " already exists. existing topic is used");
         } else {
             topic = new Topic(dto.getTopic());
+            topicService.saveTopic(topic);
+            logger.debug("topic " + dto.getTopic() + " does not exist, topic is added");
         }
 
         Question question = new Question.Builder()
@@ -63,13 +66,15 @@ public class QuestionService {
                 .type(dto.getType())
                 .build();
 
+
         for (CreateAnswerDTO answerDto : dto.getAnswersDTOs()) {
-            question.addAnswer(new Answer(answerDto.getAnswerString(), answerDto.isCorrect()));
+            question.addAnswer(new Answer(answerDto.getAnswerString(), answerDto.isCorrect(), question));
         }
 
         questionRepo.save(question);
         logger.info("SAVED: " + question.toString());
         return dto;
+
     }
 
     private void checkDto(CreateQuestionDTO dto) {
