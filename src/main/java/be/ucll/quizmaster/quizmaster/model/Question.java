@@ -46,6 +46,7 @@ public class Question {
         member = builder.member;
     }
 
+
     public Question() {
 
     }
@@ -96,12 +97,89 @@ public class Question {
         }
     }
 
+    public long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(long questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getQuestionString() {
+        return questionString;
+    }
+
+    public void setQuestionString(String questionString) {
+        this.questionString = questionString;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void addAnswer(Answer answer) {
+        this.answers.add(answer);
+    }
+
+    public Set<QuizQuestion> getQuizQuestions() {
+        return quizQuestions;
+    }
+
+    public void setQuizQuestions(Set<QuizQuestion> quizQuestions) {
+        this.quizQuestions = quizQuestions;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "questionId=" + questionId +
+                ", questionString='" + questionString + '\'' +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", answers=" + answers +
+                ", quizQuestions=" + quizQuestions +
+                ", topic=" + topic +
+                ", member=" + member +
+                '}';
+    }
+
     //TODO: add as extra later
     //@Column(name = "requested")
     //private boolean isRequested;
 
 
-    //Constructors
 
 
 

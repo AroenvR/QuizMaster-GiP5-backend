@@ -18,6 +18,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("topics")
 public class TopicController {
+
     private final Logger logger = LoggerFactory.getLogger(TopicController.class);
 
     private final TopicService topicService;

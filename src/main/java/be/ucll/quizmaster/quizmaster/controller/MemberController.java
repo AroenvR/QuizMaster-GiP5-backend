@@ -1,13 +1,11 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
-import be.ucll.quizmaster.quizmaster.controller.dto.MemberDto;
+import be.ucll.quizmaster.quizmaster.controller.dto.MemberDTO;
 import be.ucll.quizmaster.quizmaster.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +23,12 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    public ResponseEntity<MemberDto> getMemberById(){
+    public ResponseEntity<MemberDTO> getMemberById(){
         return null;
     }
 
     @PostMapping()
-    public ResponseEntity<?> createMember(@RequestBody MemberDto dto){
+    public ResponseEntity<?> createMember(@RequestBody MemberDTO dto){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(memberService.saveMember(dto));
         } catch (Exception e){

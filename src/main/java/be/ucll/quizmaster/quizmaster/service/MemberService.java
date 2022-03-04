@@ -1,6 +1,6 @@
 package be.ucll.quizmaster.quizmaster.service;
 
-import be.ucll.quizmaster.quizmaster.controller.dto.MemberDto;
+import be.ucll.quizmaster.quizmaster.controller.dto.MemberDTO;
 import be.ucll.quizmaster.quizmaster.model.Member;
 import be.ucll.quizmaster.quizmaster.repo.MemberRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.EmailExistsException;
@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,7 +29,8 @@ public class MemberService {
         this.memberRepo = memberRepo;
     }
 
-    public MemberDto saveMember(MemberDto memberDto) throws EmailExistsException, UsernameExistsException {
+    @Transactional
+    public MemberDTO saveMember(MemberDTO memberDto) throws EmailExistsException, UsernameExistsException {
 
         if (emailExists(memberDto.getEmail())) {
             throw new EmailExistsException(
@@ -64,4 +67,9 @@ public class MemberService {
 
     }
 
+    public Optional<Member> getMember(String email) {
+
+        return memberRepo.getByEmailAddress(email);
+
+    }
 }

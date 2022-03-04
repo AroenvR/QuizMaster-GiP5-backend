@@ -3,7 +3,7 @@ package be.ucll.quizmaster.quizmaster.controller.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class MemberDto {
+public class MemberDTO {
 
     @JsonProperty("email")
    private String email;
@@ -14,10 +14,10 @@ public class MemberDto {
     @JsonProperty("password")
     private String password;
 
-    public MemberDto() {
+    public MemberDTO() {
     }
 
-    public MemberDto(String email, String username, String password) {
+    public MemberDTO(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;

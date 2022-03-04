@@ -1,5 +1,6 @@
 package be.ucll.quizmaster.quizmaster.service;
 
+import be.ucll.quizmaster.quizmaster.model.Topic;
 import be.ucll.quizmaster.quizmaster.repo.TopicRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,5 +18,14 @@ public class TopicService {
         this.topicRepo = topicRepo;
     }
 
+    public boolean topicExists(String topic) {
+        return topicRepo.existsByName(topic);
+    }
+
+    public Topic getTopic(String topic) {
+
+        return topicRepo.getByName(topic);
+
+    }
 }
 

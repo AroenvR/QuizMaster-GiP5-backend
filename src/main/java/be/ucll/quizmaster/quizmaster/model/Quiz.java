@@ -46,6 +46,18 @@ public class Quiz {
         this.title = title;
     }
 
+    private Quiz(Builder builder) {
+        setQuizId(builder.quizId);
+        setTitle(builder.title);
+        setCode(builder.code);
+        setStartTime(builder.startTime);
+        setEndTime(builder.endTime);
+        quizQuestions = builder.quizQuestions;
+        setHost(builder.host);
+        participants = builder.participants;
+    }
+
+
     //getters and setters
     public Member getHost() {
         return host;
@@ -96,6 +108,11 @@ public class Quiz {
         this.endTime = endTime;
     }
 
+
+    public void setQuizQuestions(Set<QuizQuestion> quizQuestions) {
+        this.quizQuestions = quizQuestions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,4 +141,61 @@ public class Quiz {
                 '}';
     }
 
+    public static final class Builder {
+        private long quizId;
+        private String title;
+        private String code;
+        private Date startTime;
+        private Date endTime;
+        private Set<QuizQuestion> quizQuestions;
+        private Member host;
+        private Set<Participant> participants;
+
+        public Builder() {
+        }
+
+        public Builder quizId(long val) {
+            quizId = val;
+            return this;
+        }
+
+        public Builder title(String val) {
+            title = val;
+            return this;
+        }
+
+        public Builder code(String val) {
+            code = val;
+            return this;
+        }
+
+        public Builder startTime(Date val) {
+            startTime = val;
+            return this;
+        }
+
+        public Builder endTime(Date val) {
+            endTime = val;
+            return this;
+        }
+
+        public Builder quizQuestions(Set<QuizQuestion> val) {
+            quizQuestions = val;
+            return this;
+        }
+
+        public Builder host(Member val) {
+            host = val;
+            return this;
+        }
+
+        public Builder participants(Set<Participant> val) {
+            participants = val;
+            return this;
+        }
+
+        public Quiz build() {
+            return new Quiz(this);
+        }
+    }
 }

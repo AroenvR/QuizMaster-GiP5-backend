@@ -25,8 +25,7 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(Question question, boolean isCorrect, String answerString) {
-        this.question = question;
+    public Answer(String answerString, boolean isCorrect) {
         this.isCorrect = isCorrect;
         this.answerString = answerString;
     }
