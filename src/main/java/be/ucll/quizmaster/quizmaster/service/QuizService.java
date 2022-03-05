@@ -49,25 +49,28 @@ public class QuizService {
 
         MemberPrincipal memberPrincipal = (MemberPrincipal)authentication.getPrincipal();
         Member host = memberPrincipal.getMember();
-        logger.debug("quiz host is " + host.toString());
+        logger.debug("\nquiz host is " + host.toString());
 
-        Quiz quiz = new Quiz.Builder()
-                .title("")
+        Quiz toSave = new Quiz.Builder()
+                .title(dto.getTitle())
                 .host(host)
                 .code(createQuizCode())
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .build();
 
-        quiz.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(quiz, dto.getQuestionIds()));
+        toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds()));
 
-        quizRepo.save(quiz);
-        logger.info("SAVED: " + quiz.toString());
-        return dto;
+        Quiz saved = quizRepo.save(toSave);
+        logger.debug("\nSAVED: " + saved.toString());
+        return new CreateQuizDTO(saved.getQuizId(), dto);
+
     }
 
     private String createQuizCode() {
-        return new Object().hashCode() + "";
+        String s = String.valueOf(new Object().hashCode()).substring(0, 8);
+        logger.debug("quiz code is " + s);
+        return s;
     }
 
     private void checkDto(CreateQuizDTO dto) throws TimeInThePastException {
@@ -84,10 +87,15 @@ public class QuizService {
         } else if (dto.getEndTime().before(new Date())) {
             logger.debug("end time is in the past");
             throw new TimeInThePastException("end time in the past");
+        } else if (dto.getEndTime().before(dto.getStartTime())) { //TODO: minimum tijd?
+            logger.debug("end time before start time");
+            throw new TimeInThePastException("end time can't be before start time");
         } else if (dto.getTitle() == null || dto.getTitle().equals("")) {
             logger.debug("no quiz title given.");
             throw new IllegalArgumentException("quiz title is a required field");
         }
+
+        //TODO: title uniek?
 
     }
 

@@ -17,9 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service
 public class QuestionService {
 
@@ -58,7 +55,7 @@ public class QuestionService {
             logger.debug("topic " + dto.getTopic() + " does not exist, topic is added");
         }
 
-        Question question = new Question.Builder()
+        Question toSave = new Question.Builder()
                 .questionString(dto.getQuestionString())
                 .description(dto.getDescription())
                 .member(creator)
@@ -68,12 +65,12 @@ public class QuestionService {
 
 
         for (CreateAnswerDTO answerDto : dto.getAnswersDTOs()) {
-            question.addAnswer(new Answer(answerDto.getAnswerString(), answerDto.isCorrect(), question));
+            toSave.addAnswer(new Answer(answerDto.getAnswerString(), answerDto.isCorrect(), toSave));
         }
 
-        questionRepo.save(question);
-        logger.info("SAVED: " + question.toString());
-        return dto;
+        Question saved = questionRepo.save(toSave);
+        logger.info("SAVED: " + saved.toString());
+        return new CreateQuestionDTO(saved.getQuestionId(), dto);
 
     }
 
