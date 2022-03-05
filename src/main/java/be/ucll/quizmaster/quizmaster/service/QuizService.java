@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class QuizService {
@@ -68,9 +69,19 @@ public class QuizService {
     }
 
     private String createQuizCode() {
-        String s = String.valueOf(new Object().hashCode()).substring(0, 8);
-        logger.debug("quiz code is " + s);
-        return s;
+
+        String base = UUID.randomUUID().toString();
+        String code = base.substring(0, 2);
+        code += base.substring(9, 10);
+        code += base.substring(14, 15);
+        code += base.substring(19, 20);
+        code += base.substring(24, 27);
+        if (quizRepo.existsByCode(code)){
+            return createQuizCode();
+        }
+
+        logger.debug("quiz code is " + code);
+        return code;
     }
 
     private void checkDto(CreateQuizDTO dto) throws TimeInThePastException {
