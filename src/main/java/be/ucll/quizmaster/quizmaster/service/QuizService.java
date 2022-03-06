@@ -2,6 +2,7 @@ package be.ucll.quizmaster.quizmaster.service;
 
 
 import be.ucll.quizmaster.quizmaster.config.security.MemberPrincipal;
+import be.ucll.quizmaster.quizmaster.controller.dto.CodeDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
 import be.ucll.quizmaster.quizmaster.model.Member;
 import be.ucll.quizmaster.quizmaster.model.Quiz;
@@ -39,7 +40,7 @@ public class QuizService {
 
 
     @Transactional
-    public CreateQuizDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
+    public CodeDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
@@ -64,7 +65,7 @@ public class QuizService {
 
         Quiz saved = quizRepo.save(toSave);
         logger.debug("\nSAVED: " + saved.toString());
-        return new CreateQuizDTO(saved.getQuizId(), dto);
+        return new CodeDTO(saved.getCode());
 
     }
 

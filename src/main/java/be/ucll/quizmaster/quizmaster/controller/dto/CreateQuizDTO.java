@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class CreateQuizDTO {
 
-    private long quizId;
 
     //@JsonProperty("title")
     private String title;
@@ -21,16 +20,11 @@ public class CreateQuizDTO {
 
     private Set<Long> questionIds;
 
+
+
     public CreateQuizDTO() {
     }
 
-    public CreateQuizDTO(long quizId, CreateQuizDTO dto) {
-        this.quizId = quizId;
-        this.title = dto.getTitle();
-        this.startTime = dto.getStartTime();
-        this.endTime = dto.getEndTime();
-        this.questionIds = dto.getQuestionIds();
-    }
 
     public String getTitle() {
         return title;
@@ -64,13 +58,6 @@ public class CreateQuizDTO {
         this.questionIds = questionIds;
     }
 
-    public long getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(long quizId) {
-        this.quizId = quizId;
-    }
 
     @Override
     public String toString() {
