@@ -1,11 +1,5 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
-import be.ucll.quizmaster.quizmaster.model.Answer;
-import be.ucll.quizmaster.quizmaster.model.Member;
-import be.ucll.quizmaster.quizmaster.model.QuizQuestion;
-import be.ucll.quizmaster.quizmaster.model.Topic;
-
-import javax.persistence.*;
 import java.util.Set;
 
 public class CreateQuestionDTO {
@@ -22,8 +16,26 @@ public class CreateQuestionDTO {
 
     private Set<CreateAnswerDTO> answersDTOs;
 
-    public CreateQuestionDTO() {
+    public CreateQuestionDTO(long questionId, CreateQuestionDTO dto) {
+        this.questionId = questionId;
+        this.type = dto.type;
+        this.description = dto.description;
+        this.questionString = dto.questionString;
+        this.answersDTOs = dto.answersDTOs;
+        this.topic = dto.topic;
     }
+
+
+
+    private CreateQuestionDTO(Builder builder) {
+        questionId = builder.questionId;
+        setQuestionString(builder.questionString);
+        setType(builder.type);
+        setDescription(builder.description);
+        setTopic(builder.topic);
+        setAnswersDTOs(builder.answersDTOs);
+    }
+
 
     public String getQuestionString() {
         return questionString;
@@ -77,7 +89,9 @@ public class CreateQuestionDTO {
                 '}';
     }
 
+
     public static final class Builder {
+        private long questionId;
         private String questionString;
         private int type;
         private String description;
@@ -85,6 +99,11 @@ public class CreateQuestionDTO {
         private Set<CreateAnswerDTO> answersDTOs;
 
         public Builder() {
+        }
+
+        public Builder questionId(long val) {
+            questionId = val;
+            return this;
         }
 
         public Builder questionString(String val) {
