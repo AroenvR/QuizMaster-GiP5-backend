@@ -7,6 +7,7 @@ import be.ucll.quizmaster.quizmaster.repo.ParticipantRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParticipantService {
@@ -19,7 +20,7 @@ public class ParticipantService {
         this.participantRepo = participantRepo;
     }
 
-    public boolean isAlreadyInQuiz(Member candidateToJoin, Quiz quizToJoin) {
+    public boolean isAlreadyInThisQuiz(Member candidateToJoin, Quiz quizToJoin) {
         return participantRepo.existsByQuizAndMember(quizToJoin, candidateToJoin);
     }
 
@@ -28,4 +29,19 @@ public class ParticipantService {
         return participantRepo.save(participation);
 
     }
+
+    public boolean isAlreadyInAQuiz(Member candidateToJoin) {
+        return participantRepo.existsByMember(candidateToJoin);
+    }
+
+    @Transactional
+    public void setCurrentQuizFinished(Member candidateToJoin) {
+        Participant currentParticipation = participantRepo.getParticipantByMemberAndFinishedIsFalse(candidateToJoin);
+        currentParticipation.setFinished(true);
+        participantRepo.save(currentParticipation);
+        logger.debug(candidateToJoin.getEmailAddress() + " his/her quiz is set to finished");
+    }
+
+
+
 }

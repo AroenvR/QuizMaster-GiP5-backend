@@ -69,10 +69,8 @@ public class Member {
 
         Member member = (Member) o;
 
-        if (getMemberId() != member.getMemberId()) return false;
         if (!getEmailAddress().equals(member.getEmailAddress())) return false;
-        if (!getUsername().equals(member.getUsername())) return false;
-        return getPassword().equals(member.getPassword());
+        return getUsername().equals(member.getUsername());
     }
 
     @Override

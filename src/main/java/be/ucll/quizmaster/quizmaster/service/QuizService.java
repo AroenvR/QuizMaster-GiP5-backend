@@ -83,8 +83,16 @@ public class QuizService {
 
         Quiz quizToJoin = quizRepo.getByCode(quizCode);
 
-        if (participantService.isAlreadyInQuiz(candidateToJoin, quizToJoin)) {
-            throw new IllegalArgumentException("You can only participate once in a quiz");
+        if (candidateToJoin.equals(quizToJoin.getHost())){
+            throw new IllegalArgumentException("nice try ;) the host of a quiz can not join a quiz");
+        }
+
+        if (participantService.isAlreadyInAQuiz(candidateToJoin)) {
+            if (participantService.isAlreadyInThisQuiz(candidateToJoin, quizToJoin)) {
+                throw new IllegalArgumentException("You can only participate once in a quiz");
+            } else {
+                participantService.setCurrentQuizFinished(candidateToJoin);
+            }
         }
 
         Participant participation = new Participant(candidateToJoin, quizToJoin);

@@ -13,7 +13,7 @@ public class Participant {
     private long participantionId;
 
     @Column(name = "finished")
-    private boolean isFinished;
+    private boolean finished;
 
     @OneToOne
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
@@ -34,14 +34,14 @@ public class Participant {
     public Participant(Member member, Quiz quiz) {
         this.member = member;
         this.quiz = quiz;
-        this.isFinished = false;
+        this.finished = false;
     }
 
     private Participant(Builder builder) {
         setParticipantionId(builder.participantionId);
         setMember(builder.member);
         setQuiz(builder.quiz);
-        setFinished(builder.isFinished);
+        setFinished(builder.finished);
         results = builder.results;
     }
 
@@ -78,11 +78,11 @@ public class Participant {
     }
 
     public boolean isFinished() {
-        return isFinished;
+        return finished;
     }
 
     public void setFinished(boolean finished) {
-        isFinished = finished;
+        this.finished = finished;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class Participant {
         private Member member;
         private Quiz quiz;
         private Set<Result> results;
-        private boolean isFinished;
+        private boolean finished;
 
         public Builder() {
         }
@@ -138,8 +138,8 @@ public class Participant {
             return this;
         }
 
-        public Builder isFinished(boolean val) {
-            isFinished = val;
+        public Builder finished(boolean val) {
+            finished = val;
             return this;
         }
 
