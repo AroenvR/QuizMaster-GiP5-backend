@@ -10,6 +10,8 @@ import java.util.Set;
 
 public class CreateQuestionDTO {
 
+    private long questionId;
+
     private String questionString;
 
     private int type;
@@ -21,14 +23,6 @@ public class CreateQuestionDTO {
     private Set<CreateAnswerDTO> answersDTOs;
 
     public CreateQuestionDTO() {
-    }
-
-    private CreateQuestionDTO(Builder builder) {
-        setQuestionString(builder.questionString);
-        setType(builder.type);
-        setDescription(builder.description);
-        setTopic(builder.topic);
-        setAnswersDTOs(builder.answersDTOs);
     }
 
     public String getQuestionString() {
@@ -70,6 +64,7 @@ public class CreateQuestionDTO {
     public void setAnswersDTOs(Set<CreateAnswerDTO> answersDTOs) {
         this.answersDTOs = answersDTOs;
     }
+
 
     @Override
     public String toString() {

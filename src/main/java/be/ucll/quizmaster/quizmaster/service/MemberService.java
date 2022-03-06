@@ -34,7 +34,7 @@ public class MemberService {
 
         if (emailExists(memberDto.getEmail())) {
             throw new EmailExistsException(
-                    "There is an account with that email adress: " + memberDto.getEmail());
+                    "There is already an account with that email adress: " + memberDto.getEmail());
         }
 
         if (usernameExists(memberDto.getUsername())) {

@@ -25,9 +25,10 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String answerString, boolean isCorrect) {
+    public Answer(String answerString, boolean isCorrect, Question question) {
         this.isCorrect = isCorrect;
         this.answerString = answerString;
+        this.question = question;
     }
 
     //Getters & Setters
@@ -80,7 +81,6 @@ public class Answer {
     public String toString() {
         return "Answer{" +
                 "answerId=" + answerId +
-                ", question=" + question +
                 ", isCorrect=" + isCorrect +
                 ", answerString='" + answerString + '\'' +
                 '}';

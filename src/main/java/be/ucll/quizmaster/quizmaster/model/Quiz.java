@@ -25,7 +25,7 @@ public class Quiz {
     @Column(name = "end_time")
     private Date endTime;
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.PERSIST)
     private Set<QuizQuestion> quizQuestions;
 
     @ManyToOne()

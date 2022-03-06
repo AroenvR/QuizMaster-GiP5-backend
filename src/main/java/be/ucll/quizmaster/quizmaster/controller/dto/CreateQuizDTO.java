@@ -8,6 +8,7 @@ import java.util.Set;
 
 public class CreateQuizDTO {
 
+
     //@JsonProperty("title")
     private String title;
 
@@ -19,8 +20,11 @@ public class CreateQuizDTO {
 
     private Set<Long> questionIds;
 
+
+
     public CreateQuizDTO() {
     }
+
 
     public String getTitle() {
         return title;
@@ -53,6 +57,7 @@ public class CreateQuizDTO {
     public void setQuestionIds(Set<Long> questionIds) {
         this.questionIds = questionIds;
     }
+
 
     @Override
     public String toString() {

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("questions")
 public class QuestionController {
 
-    private final Logger logger = LoggerFactory.getLogger(QuizService.class);
+    private final Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     private final QuestionService questionService;
 
@@ -31,12 +31,14 @@ public class QuestionController {
 
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(questionService.saveQuestion(dto));
+
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         catch (Exception e) {
             logger.debug(e.toString());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 

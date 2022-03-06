@@ -26,9 +26,17 @@ public class Participant {
     public Participant() {
     }
 
+
     public Participant(Member member, Quiz quiz) {
         this.member = member;
         this.quiz = quiz;
+    }
+
+    private Participant(Builder builder) {
+        setParticipantionId(builder.participantionId);
+        setMember(builder.member);
+        setQuiz(builder.quiz);
+        results = builder.results;
     }
 
     public long getParticipantionId() {
@@ -84,5 +92,39 @@ public class Participant {
                 ", quiz=" + quiz +
                 ", results=" + results +
                 '}';
+    }
+
+    public static final class Builder {
+        private long participantionId;
+        private Member member;
+        private Quiz quiz;
+        private Set<Result> results;
+
+        public Builder() {
+        }
+
+        public Builder participantionId(long val) {
+            participantionId = val;
+            return this;
+        }
+
+        public Builder member(Member val) {
+            member = val;
+            return this;
+        }
+
+        public Builder quiz(Quiz val) {
+            quiz = val;
+            return this;
+        }
+
+        public Builder results(Set<Result> val) {
+            results = val;
+            return this;
+        }
+
+        public Participant build() {
+            return new Participant(this);
+        }
     }
 }

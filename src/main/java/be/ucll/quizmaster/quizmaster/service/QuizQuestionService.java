@@ -35,7 +35,7 @@ public class QuizQuestionService {
             );
 
             response.add(new QuizQuestion(question, quiz));
-            logger.info(question.toString() + " add to " + quiz.toString());
+            logger.info(question.getQuestionString() + " add to " + quiz.getTitle());
 
         }
 
