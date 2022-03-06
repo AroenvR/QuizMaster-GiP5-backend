@@ -40,12 +40,12 @@ public class QuizController {
 
     }
 
-/*    @PostMapping()
-    private ResponseEntity<?> joinQuiz(@RequestParam String quizCode){
+    @PostMapping("/{code}")
+    private ResponseEntity<?> joinQuiz(@PathVariable String code){
 
         logger.debug("JOIN quiz called.");
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(quizCode));
+            return ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
@@ -55,7 +55,9 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
-    }*/
+    }
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.service;
 
 import be.ucll.quizmaster.quizmaster.model.Member;
+import be.ucll.quizmaster.quizmaster.model.Participant;
 import be.ucll.quizmaster.quizmaster.model.Quiz;
 import be.ucll.quizmaster.quizmaster.repo.ParticipantRepo;
 import org.slf4j.Logger;
@@ -22,4 +23,9 @@ public class ParticipantService {
         return participantRepo.existsByQuizAndMember(quizToJoin, candidateToJoin);
     }
 
+    public Participant saveParticipation(Participant participation) {
+
+        return participantRepo.save(participation);
+
+    }
 }

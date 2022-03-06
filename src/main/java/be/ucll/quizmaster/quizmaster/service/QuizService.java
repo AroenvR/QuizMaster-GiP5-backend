@@ -50,7 +50,7 @@ public class QuizService {
     @Transactional
     public CodeDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
 
-        Member host = getLoggedInMemeber("host a quiz");
+        Member host = getLoggedInMember("host a quiz");
         logger.debug("\nquiz host is " + host.toString());
 
         checkCreateDto(dto);
@@ -75,7 +75,7 @@ public class QuizService {
     @Transactional
     public QuizDTO joinQuiz(String quizCode) throws NotAuthenticatedException {
 
-        Member candidateToJoin = getLoggedInMemeber("join a quiz.");
+        Member candidateToJoin = getLoggedInMember("join a quiz.");
 
         if (!quizRepo.existsByCode(quizCode)){
             throw new IllegalArgumentException("no quiz with code '" + quizCode + "'");
@@ -84,9 +84,16 @@ public class QuizService {
         Quiz quizToJoin = quizRepo.getByCode(quizCode);
 
         if (participantService.isAlreadyInQuiz(candidateToJoin, quizToJoin)) {
-            //throw new Illegal
+            throw new IllegalArgumentException("You can only participate once in a quiz");
         }
-        return null;
+
+        Participant participation = new Participant(candidateToJoin, quizToJoin);
+        Participant saved = participantService.saveParticipation(participation);
+        logger.debug("SAVED: " + saved);
+
+        QuizDTO response = new QuizDTO(saved.getQuiz().getTitle(), saved.getQuiz().getHost().getUsername());
+        logger.debug("Response:" + response);
+        return response;
 
     }
 
@@ -132,11 +139,11 @@ public class QuizService {
         return code;
     }
 
-    private Member getLoggedInMemeber(String actionRequested) throws NotAuthenticatedException {
+    private Member getLoggedInMember(String actionRequested) throws NotAuthenticatedException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
-            throw new NotAuthenticatedException("Not authenticated. only members can " + authentication);
+            throw new NotAuthenticatedException("Not authenticated. only members can " + actionRequested);
         }
 
         MemberPrincipal memberPrincipal = (MemberPrincipal)authentication.getPrincipal();

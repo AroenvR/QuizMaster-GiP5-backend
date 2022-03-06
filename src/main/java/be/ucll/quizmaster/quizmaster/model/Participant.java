@@ -12,6 +12,9 @@ public class Participant {
     @Column(name = "participation_id")
     private long participantionId;
 
+    @Column(name = "finished")
+    private boolean isFinished;
+
     @OneToOne
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
@@ -23,6 +26,7 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private Set<Result> results;
 
+
     public Participant() {
     }
 
@@ -30,12 +34,14 @@ public class Participant {
     public Participant(Member member, Quiz quiz) {
         this.member = member;
         this.quiz = quiz;
+        this.isFinished = false;
     }
 
     private Participant(Builder builder) {
         setParticipantionId(builder.participantionId);
         setMember(builder.member);
         setQuiz(builder.quiz);
+        setFinished(builder.isFinished);
         results = builder.results;
     }
 
@@ -71,6 +77,14 @@ public class Participant {
         this.results.add(result);
     }
 
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,8 +102,8 @@ public class Participant {
     public String toString() {
         return "Participant{" +
                 "participantionId=" + participantionId +
-                ", member=" + member +
-                ", quiz=" + quiz +
+                ", member=" + member.getEmailAddress() +
+                ", quiz=" + quiz.getCode() +
                 ", results=" + results +
                 '}';
     }
@@ -99,6 +113,7 @@ public class Participant {
         private Member member;
         private Quiz quiz;
         private Set<Result> results;
+        private boolean isFinished;
 
         public Builder() {
         }
@@ -120,6 +135,11 @@ public class Participant {
 
         public Builder results(Set<Result> val) {
             results = val;
+            return this;
+        }
+
+        public Builder isFinished(boolean val) {
+            isFinished = val;
             return this;
         }
 
