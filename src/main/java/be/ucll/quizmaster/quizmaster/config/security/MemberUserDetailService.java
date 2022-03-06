@@ -22,7 +22,7 @@ public class MemberUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         logger.warn("load user -> " + email);
-        Member member = memberRepo.getByEmailAddress(email).orElseThrow(() -> new UsernameNotFoundException(String.format("user with %s not fount", email)));
+        Member member = memberRepo.getByEmailAddress(email).orElseThrow(() -> new UsernameNotFoundException(String.format("user with %s not found", email)));
         logger.warn("account found -> " + member.toString());
         MemberPrincipal memberPrincipal = new MemberPrincipal(member);
         logger.warn(memberPrincipal.toString());

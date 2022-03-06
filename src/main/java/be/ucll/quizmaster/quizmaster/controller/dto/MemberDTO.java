@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MemberDTO {
 
-    @JsonProperty("email")
+    @JsonProperty("emailAddress")
    private String email;
 
     @JsonProperty("username")
@@ -21,6 +21,12 @@ public class MemberDTO {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    private MemberDTO(Builder builder) {
+        setEmail(builder.email);
+        setUsername(builder.username);
+        setPassword(builder.password);
     }
 
     public String getEmail() {
@@ -54,5 +60,33 @@ public class MemberDTO {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public static final class Builder {
+        private String email;
+        private String username;
+        private String password;
+
+        public Builder() {
+        }
+
+        public Builder email(String val) {
+            email = val;
+            return this;
+        }
+
+        public Builder username(String val) {
+            username = val;
+            return this;
+        }
+
+        public Builder password(String val) {
+            password = val;
+            return this;
+        }
+
+        public MemberDTO build() {
+            return new MemberDTO(this);
+        }
     }
 }

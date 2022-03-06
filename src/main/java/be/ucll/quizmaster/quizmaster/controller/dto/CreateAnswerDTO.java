@@ -9,6 +9,11 @@ public class CreateAnswerDTO {
     public CreateAnswerDTO() {
     }
 
+    private CreateAnswerDTO(Builder builder) {
+        setAnswerString(builder.answerString);
+        setCorrect(builder.correct);
+    }
+
     public String getAnswerString() {
         return answerString;
     }
@@ -31,5 +36,27 @@ public class CreateAnswerDTO {
                 "answerString='" + answerString + '\'' +
                 ", correct=" + correct +
                 '}';
+    }
+
+    public static final class Builder {
+        private String answerString;
+        private boolean correct;
+
+        public Builder() {
+        }
+
+        public Builder answerString(String val) {
+            answerString = val;
+            return this;
+        }
+
+        public Builder correct(boolean val) {
+            correct = val;
+            return this;
+        }
+
+        public CreateAnswerDTO build() {
+            return new CreateAnswerDTO(this);
+        }
     }
 }

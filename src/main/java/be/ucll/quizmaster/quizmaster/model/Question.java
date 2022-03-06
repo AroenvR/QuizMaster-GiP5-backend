@@ -16,6 +16,10 @@ public class Question {
     @Column(name = "question_string")
     private String questionString;
 
+//  Type:
+//  1/ Multiple choice
+//  2/ True/false
+//  3/ Fill in the blank
     @Column(name = "type")
     private int type;
 

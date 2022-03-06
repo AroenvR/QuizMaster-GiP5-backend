@@ -23,6 +23,14 @@ public class CreateQuestionDTO {
     public CreateQuestionDTO() {
     }
 
+    private CreateQuestionDTO(Builder builder) {
+        setQuestionString(builder.questionString);
+        setType(builder.type);
+        setDescription(builder.description);
+        setTopic(builder.topic);
+        setAnswersDTOs(builder.answersDTOs);
+    }
+
     public String getQuestionString() {
         return questionString;
     }
@@ -72,5 +80,45 @@ public class CreateQuestionDTO {
                 ", topic='" + topic + '\'' +
                 ", answersDTOs=" + answersDTOs +
                 '}';
+    }
+
+    public static final class Builder {
+        private String questionString;
+        private int type;
+        private String description;
+        private String topic;
+        private Set<CreateAnswerDTO> answersDTOs;
+
+        public Builder() {
+        }
+
+        public Builder questionString(String val) {
+            questionString = val;
+            return this;
+        }
+
+        public Builder type(int val) {
+            type = val;
+            return this;
+        }
+
+        public Builder description(String val) {
+            description = val;
+            return this;
+        }
+
+        public Builder topic(String val) {
+            topic = val;
+            return this;
+        }
+
+        public Builder answersDTOs(Set<CreateAnswerDTO> val) {
+            answersDTOs = val;
+            return this;
+        }
+
+        public CreateQuestionDTO build() {
+            return new CreateQuestionDTO(this);
+        }
     }
 }

@@ -1,10 +1,8 @@
 package be.ucll.quizmaster.quizmaster;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class QuizMasterApplicationTests {
+class QuizMasterApplicationTests extends AbstractIntegrationTesting{
 
     @Test
     void contextLoads() {

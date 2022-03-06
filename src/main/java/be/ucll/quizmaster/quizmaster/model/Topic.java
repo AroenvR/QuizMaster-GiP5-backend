@@ -19,12 +19,12 @@ public class Topic {
     private Set<Question> questions;
 
     //constructors
-    public Topic() {
-    }
+    public Topic() {}
 
     public Topic(String name) {
         this.name = name;
     }
+
 
     public long getTopicId() {
         return topicId;
