@@ -5,13 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MemberDTO {
 
-    @JsonProperty("emailAddress")
    private String email;
 
-    @JsonProperty("username")
    private String username;
 
-    @JsonProperty("password")
     private String password;
 
     public MemberDTO() {
