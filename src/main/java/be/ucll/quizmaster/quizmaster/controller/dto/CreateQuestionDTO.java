@@ -16,6 +16,10 @@ public class CreateQuestionDTO {
 
     private Set<CreateAnswerDTO> answersDTOs;
 
+    public CreateQuestionDTO() {
+
+    }
+
     public CreateQuestionDTO(long questionId, CreateQuestionDTO dto) {
         this.questionId = questionId;
         this.type = dto.type;
@@ -24,7 +28,6 @@ public class CreateQuestionDTO {
         this.answersDTOs = dto.answersDTOs;
         this.topic = dto.topic;
     }
-
 
 
     private CreateQuestionDTO(Builder builder) {
@@ -134,5 +137,6 @@ public class CreateQuestionDTO {
         public CreateQuestionDTO build() {
             return new CreateQuestionDTO(this);
         }
+
     }
 }

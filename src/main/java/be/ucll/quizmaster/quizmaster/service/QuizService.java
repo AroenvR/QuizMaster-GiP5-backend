@@ -1,7 +1,6 @@
 package be.ucll.quizmaster.quizmaster.service;
 
 
-import be.ucll.quizmaster.quizmaster.config.security.MemberPrincipal;
 import be.ucll.quizmaster.quizmaster.controller.dto.CodeDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuizDTO;
@@ -13,9 +12,6 @@ import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedExceptio
 import be.ucll.quizmaster.quizmaster.service.exceptions.TimeInThePastException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,17 +25,19 @@ public class QuizService {
 
     private final QuizRepo quizRepo;
 
+    private final LoginService loginService;
     private final QuestionService questionService;
     private final QuizQuestionService quizQuestionService;
     private final MemberService memberService;
     private final ParticipantService participantService;
 
     public QuizService(QuizRepo quizRepo,
-                       QuestionService questionService,
+                       LoginService loginService, QuestionService questionService,
                        QuizQuestionService quizQuestionService,
                        MemberService memberService,
                        ParticipantService participantService) {
         this.quizRepo = quizRepo;
+        this.loginService = loginService;
         this.questionService = questionService;
         this.quizQuestionService = quizQuestionService;
         this.memberService = memberService;
@@ -50,7 +48,7 @@ public class QuizService {
     @Transactional
     public CodeDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
 
-        Member host = getLoggedInMember("host a quiz");
+        Member host = loginService.getLoggedInMember("Not authenticated. only members can host a quiz");
         logger.debug("\nquiz host is " + host.toString());
 
         checkCreateDto(dto);
@@ -75,7 +73,7 @@ public class QuizService {
     @Transactional
     public QuizDTO joinQuiz(String quizCode) throws NotAuthenticatedException {
 
-        Member candidateToJoin = getLoggedInMember("join a quiz.");
+        Member candidateToJoin = loginService.getLoggedInMember("Not authenticated. only members can join a quiz.");
 
         if (!quizRepo.existsByCode(quizCode)){
             throw new IllegalArgumentException("no quiz with code '" + quizCode + "'");
@@ -147,16 +145,6 @@ public class QuizService {
         return code;
     }
 
-    private Member getLoggedInMember(String actionRequested) throws NotAuthenticatedException {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
-            throw new NotAuthenticatedException("Not authenticated. only members can " + actionRequested);
-        }
-
-        MemberPrincipal memberPrincipal = (MemberPrincipal)authentication.getPrincipal();
-        return memberPrincipal.getMember();
-
-    }
 
 }
