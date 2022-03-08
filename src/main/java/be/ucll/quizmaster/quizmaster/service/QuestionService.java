@@ -1,21 +1,16 @@
 package be.ucll.quizmaster.quizmaster.service;
 
-import be.ucll.quizmaster.quizmaster.config.security.MemberPrincipal;
-import be.ucll.quizmaster.quizmaster.controller.dto.CreateAnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
-import be.ucll.quizmaster.quizmaster.model.Answer;
-import be.ucll.quizmaster.quizmaster.model.Member;
-import be.ucll.quizmaster.quizmaster.model.Question;
-import be.ucll.quizmaster.quizmaster.model.Topic;
+import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
+import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class QuestionService {
@@ -24,26 +19,23 @@ public class QuestionService {
 
     private final QuestionRepo questionRepo;
     private final TopicService topicService;
+    private final LoginService loginService;
+    private final QuizService quizService;
 
-    public QuestionService(QuestionRepo questionRepo, TopicService topicService) {
+    public QuestionService(QuestionRepo questionRepo, TopicService topicService, LoginService loginService, QuizService quizService) {
         this.questionRepo = questionRepo;
         this.topicService = topicService;
+        this.loginService = loginService;
+        this.quizService = quizService;
     }
 
     @Transactional
     public CreateQuestionDTO saveQuestion(CreateQuestionDTO dto) throws NotAuthenticatedException {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
-            throw new NotAuthenticatedException("Not authenticated. only members can create a question.");
-        }
-
-        checkDto(dto);
-
-        MemberPrincipal memberPrincipal = (MemberPrincipal) authentication.getPrincipal();
-        Member creator = memberPrincipal.getMember();
+        Member creator = loginService.getLoggedInMember("Not authenticated. only members can create a question.");
         logger.debug("question creator is " + creator.toString());
 
+        checkDto(dto);
 
         Topic topic;
         if (topicService.topicExists(dto.getTopic())) {
@@ -62,17 +54,25 @@ public class QuestionService {
                 .topic(topic)
                 .type(dto.getType())
                 .build();
-
-
-        for (CreateAnswerDTO answerDto : dto.getAnswersDTOs()) {
-            toSave.addAnswer(new Answer(answerDto.getAnswerString(), answerDto.isCorrect(), toSave));
-        }
+        
+        setAnswersInQuestion(toSave, dto.getAnswers());
 
         Question saved = questionRepo.save(toSave);
         logger.info("SAVED: " + saved.toString());
         return new CreateQuestionDTO(saved.getQuestionId(), dto);
-
     }
+
+    @Transactional
+    public QuestionDTO getNextQuestion() throws NotAuthenticatedException {
+
+        Member loggedInMember = loginService.getLoggedInMember("only members can get a question");
+
+        Quiz quizPlayed = quizService.getQuizPlayed(loggedInMember);
+        return null;
+
+        //TODO
+    }
+
 
     private void checkDto(CreateQuestionDTO dto) {
 
@@ -85,54 +85,83 @@ public class QuestionService {
         if (dto.getTopic() == null || dto.getTopic().equals("")) {
             throw new IllegalArgumentException("topic is a required field");
         }
-        if (dto.getAnswersDTOs() == null || dto.getAnswersDTOs().size() == 0) {
+        if (dto.getAnswers() == null || dto.getAnswers().size() == 0) {
             throw new IllegalArgumentException("a question must have at least 1 answer");
         }
 
         if (dto.getType() == 0) {
             throw new IllegalArgumentException("type is a required field");
+        } else if (dto.getType() < 0 || dto.getType() > 3) {
+            throw new IllegalArgumentException("type must be 1, 2 or 3");
         }
 
         int correctAnswerCount = 0;
-        for (CreateAnswerDTO answerDto : dto.getAnswersDTOs()) {
-            if (answerDto.getAnswerString() == null || answerDto.getAnswerString().equals("")) {
+        for (String answer : dto.getAnswers()) {
+            if (answer == null || answer.equals("")) {
                 throw new IllegalArgumentException("answer string is a required field");
-            } else if (answerDto.isCorrect()) {
-                correctAnswerCount++;
             }
         }
 
         switch (dto.getType()) {
             case 1: //multiple choice
-                if (dto.getAnswersDTOs().size() < 2) {
+                if (dto.getAnswers().size() < 2) {
                     throw new IllegalArgumentException("a multiple choice question must have at least 2 answers");
-                } else if (dto.getAnswersDTOs().size() > 10) {
+                } else if (dto.getAnswers().size() > 10) {
                     throw new IllegalArgumentException("a multiple choice question can not have more than 10 answers");
                 }
                 break;
             case 2:
-                if (dto.getAnswersDTOs().size() != 2) {
-                    throw new IllegalArgumentException("a true or false question must have exactly 2 answers");
+                if (dto.getAnswers().size() != 1) {
+                    throw new IllegalArgumentException("a true or false question has only one right answer");
                 }
                 break;
             case 3:
-                if (dto.getAnswersDTOs().size() > 10) {
+                if (dto.getAnswers().size() > 10) {
                     throw new IllegalArgumentException("a fill in de blank question can not have more than 10 answers");
 
                 }
         }
 
-        for (int i = 0; i < dto.getAnswersDTOs().size(); i++) {
-            for (int j = i + 1; j < dto.getAnswersDTOs().size(); j++) {
-                if (dto.getAnswersDTOs().get(i).getAnswerString().equals(dto.getAnswersDTOs().get(j).getAnswerString())){
+        for (int i = 0; i < dto.getAnswers().size(); i++) {
+            for (int j = i + 1; j < dto.getAnswers().size(); j++) {
+                if (dto.getAnswers().get(i).equals(dto.getAnswers().get(j))) {
                     throw new IllegalArgumentException("every answer must be unique");
                 }
             }
         }
 
-        if (correctAnswerCount == 0) {
-            throw new IllegalArgumentException("there must be 1 correct answer per question");
+    }
+
+    private void setAnswersInQuestion(Question toSave, List<String> answers) {
+        switch (toSave.getType()) {
+            case 1: //multiple choice
+                toSave.addAnswer(new Answer(answers.get(0), true, toSave));
+                for (int i = 1; i < answers.size(); i++) {
+                    toSave.addAnswer(new Answer(answers.get(i), false, toSave));
+                }
+                break;
+            case 2:
+                if (answers.get(0).equalsIgnoreCase("true")) {
+                    //true is het juiste antwoord
+                    toSave.addAnswer(new Answer(answers.get(0), true, toSave));
+                    //false is niet het jusite werk
+                    toSave.addAnswer(new Answer("false", false, toSave));
+                } else if (answers.get(0).equalsIgnoreCase("false")) {
+                    //true is niet het juiste antwoord
+                    toSave.addAnswer(new Answer("true", false, toSave));
+                    //false is het juiste antwoord
+                    toSave.addAnswer(new Answer(answers.get(0), true, toSave));
+                } else throw new IllegalArgumentException("the answer can only be true or false");
+                break;
+            case 3:
+                for (String answer : answers) {
+                    toSave.addAnswer(new Answer(answer, true, toSave));
+                }
+                break;
         }
 
     }
+
+
 }
+

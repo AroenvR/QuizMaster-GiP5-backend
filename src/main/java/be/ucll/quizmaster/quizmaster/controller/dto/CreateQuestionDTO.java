@@ -15,7 +15,7 @@ public class CreateQuestionDTO {
 
     private String topic;
 
-    private List<CreateAnswerDTO> answersDTOs;
+    private List<String> answers;
 
     public CreateQuestionDTO() {
     }
@@ -25,7 +25,7 @@ public class CreateQuestionDTO {
         this.type = dto.type;
         this.description = dto.description;
         this.questionString = dto.questionString;
-        this.answersDTOs = dto.answersDTOs;
+        this.answers = dto.answers;
         this.topic = dto.topic;
     }
 
@@ -36,7 +36,7 @@ public class CreateQuestionDTO {
         setType(builder.type);
         setDescription(builder.description);
         setTopic(builder.topic);
-        setAnswersDTOs(builder.answersDTOs);
+        setAnswersDTOs(builder.answers);
     }
 
 
@@ -72,12 +72,12 @@ public class CreateQuestionDTO {
         this.topic = topic;
     }
 
-    public List<CreateAnswerDTO> getAnswersDTOs() {
-        return answersDTOs;
+    public List<String> getAnswers() {
+        return answers;
     }
 
-    public void setAnswersDTOs(List<CreateAnswerDTO> answersDTOs) {
-        this.answersDTOs = answersDTOs;
+    public void setAnswersDTOs(List<String> answersDTOs) {
+        this.answers = answersDTOs;
     }
 
 
@@ -88,7 +88,7 @@ public class CreateQuestionDTO {
                 ", type=" + type +
                 ", description='" + description + '\'' +
                 ", topic='" + topic + '\'' +
-                ", answersDTOs=" + answersDTOs +
+                ", answers=" + answers +
                 '}';
     }
 
@@ -99,7 +99,7 @@ public class CreateQuestionDTO {
         private int type;
         private String description;
         private String topic;
-        private List<CreateAnswerDTO> answersDTOs;
+        private List<String > answers;
 
         public Builder() {
         }
@@ -129,8 +129,8 @@ public class CreateQuestionDTO {
             return this;
         }
 
-        public Builder answersDTOs(List<CreateAnswerDTO> val) {
-            answersDTOs = val;
+        public Builder answersDTOs(List<String> val) {
+            answers = val;
             return this;
         }
 

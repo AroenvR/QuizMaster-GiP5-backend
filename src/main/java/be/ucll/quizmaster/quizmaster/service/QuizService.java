@@ -26,24 +26,22 @@ public class QuizService {
     private final QuizRepo quizRepo;
 
     private final LoginService loginService;
-    private final QuestionService questionService;
     private final QuizQuestionService quizQuestionService;
     private final MemberService memberService;
     private final ParticipantService participantService;
 
+
     public QuizService(QuizRepo quizRepo,
-                       LoginService loginService, QuestionService questionService,
+                       LoginService loginService,
                        QuizQuestionService quizQuestionService,
                        MemberService memberService,
                        ParticipantService participantService) {
         this.quizRepo = quizRepo;
         this.loginService = loginService;
-        this.questionService = questionService;
         this.quizQuestionService = quizQuestionService;
         this.memberService = memberService;
         this.participantService = participantService;
     }
-
 
     @Transactional
     public CodeDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
@@ -146,5 +144,8 @@ public class QuizService {
     }
 
 
-
+    public Quiz getQuizPlayed(Member loggedInMember) {
+        return null;
+        //TODO
+    }
 }

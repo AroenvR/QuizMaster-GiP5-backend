@@ -1,11 +1,7 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
-import be.ucll.quizmaster.quizmaster.controller.dto.CreateAnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
-import be.ucll.quizmaster.quizmaster.repo.MemberRepo;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,14 +46,8 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     @Test
     void createQuestion() throws Exception {
-        CreateAnswerDTO answer = new CreateAnswerDTO.Builder()
-                .answerString("true")
-                .correct(true)
-                .build();
 
-        List<CreateAnswerDTO> answers = new ArrayList<>();
-        answers.add(answer);
-
+        List<String> answers = new ArrayList<>();
         CreateQuestionDTO question = new CreateQuestionDTO.Builder()
                 .questionString("Is dit vraag 1?")
                 .description("True or False.")

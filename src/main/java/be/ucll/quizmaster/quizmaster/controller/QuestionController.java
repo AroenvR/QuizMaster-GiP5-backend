@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("questions")
@@ -38,7 +35,24 @@ public class QuestionController {
         }
         catch (Exception e) {
             logger.debug(e.toString());
-            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+    }
+
+
+    @GetMapping()
+    private ResponseEntity<?> getNextQuestion(){
+        logger.debug("GET next question called.");
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion());
+        } catch (NotAuthenticatedException e) {
+            logger.debug(e.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        catch (Exception e) {
+            logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
