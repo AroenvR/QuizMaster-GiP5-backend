@@ -93,13 +93,40 @@ public class QuestionService {
             throw new IllegalArgumentException("type is a required field");
         }
 
-
         int correctAnswerCount = 0;
         for (CreateAnswerDTO answerDto : dto.getAnswersDTOs()) {
             if (answerDto.getAnswerString() == null || answerDto.getAnswerString().equals("")) {
                 throw new IllegalArgumentException("answer string is a required field");
             } else if (answerDto.isCorrect()) {
                 correctAnswerCount++;
+            }
+        }
+
+        switch (dto.getType()) {
+            case 1: //multiple choice
+                if (dto.getAnswersDTOs().size() < 2) {
+                    throw new IllegalArgumentException("a multiple choice question must have at least 2 answers");
+                } else if (dto.getAnswersDTOs().size() > 10) {
+                    throw new IllegalArgumentException("a multiple choice question can not have more than 10 answers");
+                }
+                break;
+            case 2:
+                if (dto.getAnswersDTOs().size() != 2) {
+                    throw new IllegalArgumentException("a true or false question must have exactly 2 answers");
+                }
+                break;
+            case 3:
+                if (dto.getAnswersDTOs().size() > 10) {
+                    throw new IllegalArgumentException("a fill in de blank question can not have more than 10 answers");
+
+                }
+        }
+
+        for (int i = 0; i < dto.getAnswersDTOs().size(); i++) {
+            for (int j = i + 1; j < dto.getAnswersDTOs().size(); j++) {
+                if (dto.getAnswersDTOs().get(i).getAnswerString().equals(dto.getAnswersDTOs().get(j).getAnswerString())){
+                    throw new IllegalArgumentException("every answer must be unique");
+                }
             }
         }
 

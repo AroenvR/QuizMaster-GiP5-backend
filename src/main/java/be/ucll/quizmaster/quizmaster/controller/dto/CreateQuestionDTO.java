@@ -1,5 +1,6 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
+import java.util.List;
 import java.util.Set;
 
 public class CreateQuestionDTO {
@@ -14,10 +15,9 @@ public class CreateQuestionDTO {
 
     private String topic;
 
-    private Set<CreateAnswerDTO> answersDTOs;
+    private List<CreateAnswerDTO> answersDTOs;
 
     public CreateQuestionDTO() {
-
     }
 
     public CreateQuestionDTO(long questionId, CreateQuestionDTO dto) {
@@ -72,11 +72,11 @@ public class CreateQuestionDTO {
         this.topic = topic;
     }
 
-    public Set<CreateAnswerDTO> getAnswersDTOs() {
+    public List<CreateAnswerDTO> getAnswersDTOs() {
         return answersDTOs;
     }
 
-    public void setAnswersDTOs(Set<CreateAnswerDTO> answersDTOs) {
+    public void setAnswersDTOs(List<CreateAnswerDTO> answersDTOs) {
         this.answersDTOs = answersDTOs;
     }
 
@@ -99,7 +99,7 @@ public class CreateQuestionDTO {
         private int type;
         private String description;
         private String topic;
-        private Set<CreateAnswerDTO> answersDTOs;
+        private List<CreateAnswerDTO> answersDTOs;
 
         public Builder() {
         }
@@ -129,7 +129,7 @@ public class CreateQuestionDTO {
             return this;
         }
 
-        public Builder answersDTOs(Set<CreateAnswerDTO> val) {
+        public Builder answersDTOs(List<CreateAnswerDTO> val) {
             answersDTOs = val;
             return this;
         }

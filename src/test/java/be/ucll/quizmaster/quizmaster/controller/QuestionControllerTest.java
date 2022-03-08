@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -56,7 +57,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 .correct(true)
                 .build();
 
-        Set<CreateAnswerDTO> answers = new HashSet<>();
+        List<CreateAnswerDTO> answers = new ArrayList<>();
         answers.add(answer);
 
         CreateQuestionDTO question = new CreateQuestionDTO.Builder()
