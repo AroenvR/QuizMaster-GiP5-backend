@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -79,7 +80,7 @@ public abstract class AbstractIntegrationTesting {
         wout = fromMvcResult(mvcPost, MemberDTO.class);
 
 
-        MemberDTO oderickDTO = new MemberDTO("oderick@vandongen.be", "uderax", "TESTTEST");
+        MemberDTO oderickDTO = new MemberDTO("oderick@vandongen.be", "test", "test");
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webAppCont).apply(springSecurity()).build();
 
@@ -97,7 +98,7 @@ public abstract class AbstractIntegrationTesting {
     private void cleanup() throws Exception {
 
         memberRepo.deleteByEmailAddress("wout@bosteels.eu");
-        memberRepo.deleteByEmailAddress("oderick@vandongen.bew");
+        memberRepo.deleteByEmailAddress("oderick@vandongen.be");
 
     }
 
@@ -125,4 +126,5 @@ public abstract class AbstractIntegrationTesting {
             throw new RuntimeException(e);
         }
     }
+
 }

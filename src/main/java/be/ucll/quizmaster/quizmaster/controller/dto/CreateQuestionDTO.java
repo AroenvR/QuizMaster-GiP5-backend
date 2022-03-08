@@ -1,17 +1,24 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Set;
 
 public class CreateQuestionDTO {
 
+    @JsonProperty(required = false)
     private long questionId;
 
+    @JsonProperty(defaultValue = "TEST")
     private String questionString;
 
+    @JsonProperty(defaultValue = "1")
     private int type;
 
+    @JsonProperty(defaultValue = "TEST")
     private String description;
 
+    @JsonProperty(defaultValue = "TEST")
     private String topic;
 
     private Set<CreateAnswerDTO> answersDTOs;
@@ -26,7 +33,6 @@ public class CreateQuestionDTO {
     }
 
 
-
     private CreateQuestionDTO(Builder builder) {
         questionId = builder.questionId;
         setQuestionString(builder.questionString);
@@ -36,6 +42,13 @@ public class CreateQuestionDTO {
         setAnswersDTOs(builder.answersDTOs);
     }
 
+    public long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(long questionId) {
+        this.questionId = questionId;
+    }
 
     public String getQuestionString() {
         return questionString;

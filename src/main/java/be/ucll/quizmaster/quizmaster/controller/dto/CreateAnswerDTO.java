@@ -1,9 +1,13 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateAnswerDTO {
 
+    @JsonProperty(defaultValue = "TEST")
     private String answerString;
 
+    @JsonProperty(defaultValue = "true")
     private boolean correct;
 
     public CreateAnswerDTO() {
@@ -29,6 +33,8 @@ public class CreateAnswerDTO {
     public void setCorrect(boolean correct) {
         this.correct = correct;
     }
+
+
 
     @Override
     public String toString() {
