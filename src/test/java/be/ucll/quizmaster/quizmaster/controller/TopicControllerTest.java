@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class TopicControllerTest extends AbstractIntegrationTesting {
 
-
     @Test
     public void getAllTopics() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/topics")

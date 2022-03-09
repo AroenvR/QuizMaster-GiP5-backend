@@ -69,6 +69,7 @@ public class QuestionService {
         }
 
         Question saved = questionRepo.save(toSave);
+
         logger.info("SAVED: " + saved.toString());
         return new CreateQuestionDTO(saved.getQuestionId(), dto);
 
