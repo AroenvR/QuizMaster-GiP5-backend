@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface QuestionRepo extends CrudRepository<Question, Long> {
+public interface QuestionRepo extends JpaRepository<Question, Long> {
+
+    //Optional<Question> getBy
 
 }

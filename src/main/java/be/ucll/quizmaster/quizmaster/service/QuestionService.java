@@ -5,12 +5,16 @@ import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
+import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -20,13 +24,15 @@ public class QuestionService {
     private final QuestionRepo questionRepo;
     private final TopicService topicService;
     private final LoginService loginService;
-    private final QuizService quizService;
+    private final QuizQuestionService quizQuestionService;
+    private final ParticipantService participantService;
 
-    public QuestionService(QuestionRepo questionRepo, TopicService topicService, LoginService loginService, QuizService quizService) {
+    public QuestionService(QuestionRepo questionRepo, TopicService topicService, LoginService loginService, QuizService quizService, QuizQuestionService quizQuestionService, ParticipantService participantService) {
         this.questionRepo = questionRepo;
         this.topicService = topicService;
         this.loginService = loginService;
-        this.quizService = quizService;
+        this.quizQuestionService = quizQuestionService;
+        this.participantService = participantService;
     }
 
     @Transactional
@@ -54,7 +60,7 @@ public class QuestionService {
                 .topic(topic)
                 .type(dto.getType())
                 .build();
-        
+
         setAnswersInQuestion(toSave, dto.getAnswers());
 
         Question saved = questionRepo.save(toSave);
@@ -63,14 +69,61 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionDTO getNextQuestion() throws NotAuthenticatedException {
+    public QuestionDTO getNextQuestion(String answerToPrevious) throws NotAuthenticatedException {
 
         Member loggedInMember = loginService.getLoggedInMember("only members can get a question");
 
-        Quiz quizPlayed = quizService.getQuizPlayed(loggedInMember);
-        return null;
+        Participant currentParticipation = participantService.getCurrentParticipation(loggedInMember);
+        Quiz quizPlayed = currentParticipation.getQuiz();
 
-        //TODO
+        if (quizPlayed.getStartTime().after(new Date())) {
+            throw new IllegalArgumentException("Quiz did not start yet.");
+        } else if (quizPlayed.getEndTime().before(new Date())) {
+            throw new IllegalArgumentException("The quiz is closed.");
+        }
+
+        Question previousQuestion;
+        for (QuizQuestion q : quizPlayed.getQuizQuestions()) {
+            if (!quizQuestionService.quizQuestionHasResultForParticipation(q, currentParticipation)) {
+
+                previousQuestion = q.getQuestion();
+                logger.debug(previousQuestion.toString());
+
+                Result r = new Result.Builder()
+                        .answerGiven(answerToPrevious)
+                        .quizQuestion(q)
+                        .isCorrect(true)
+                        .participant(currentParticipation)
+                        .startTime(new Date())
+                        .endTime(new Date())
+                        .build();
+                q.addResult(r);
+
+            }
+        }
+
+        Question nextQuestion = null;
+        for (QuizQuestion q : quizPlayed.getQuizQuestions()) {
+            if (!quizQuestionService.quizQuestionHasResultForParticipation(q, currentParticipation)) {
+                nextQuestion = q.getQuestion();
+                logger.debug(nextQuestion.toString());
+            }
+        }
+
+        if (nextQuestion == null) throw new QuizFinishedException("you have finished this quiz.");
+
+        Set<String> answers = nextQuestion.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toSet());
+
+        return new QuestionDTO.Builder()
+                .questionString(nextQuestion.getQuestionString())
+                .description(nextQuestion.getDescription())
+                .answers(answers)
+                .type(nextQuestion.getType())
+                .topic(nextQuestion.getTopic().getName())
+                .isBreak(false)
+                .quizTitle(quizPlayed.getTitle())
+                .build();
+
     }
 
 
@@ -131,6 +184,7 @@ public class QuestionService {
         }
 
     }
+
 
     private void setAnswersInQuestion(Question toSave, List<String> answers) {
         switch (toSave.getType()) {

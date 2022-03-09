@@ -3,6 +3,7 @@ package be.ucll.quizmaster.quizmaster.controller.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Set;
 
 public class QuestionDTO {
 
@@ -12,7 +13,7 @@ public class QuestionDTO {
 
     private int type;
 
-    private List<String> answers;
+    private Set<String> answers;
 
     @JsonProperty("break")
     private boolean isBreak;
@@ -58,11 +59,11 @@ public class QuestionDTO {
         this.type = type;
     }
 
-    public List<String> getAnswers() {
+    public Set<String> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<String> answers) {
+    public void setAnswers(Set<String> answers) {
         this.answers = answers;
     }
 
@@ -94,7 +95,7 @@ public class QuestionDTO {
         private String quizTitle;
         private String questionString;
         private int type;
-        private List<String> answers;
+        private Set<String> answers;
         private boolean isBreak;
         private String topic;
         private String description;
@@ -117,7 +118,7 @@ public class QuestionDTO {
             return this;
         }
 
-        public Builder answers(List<String> val) {
+        public Builder answers(Set<String> val) {
             answers = val;
             return this;
         }

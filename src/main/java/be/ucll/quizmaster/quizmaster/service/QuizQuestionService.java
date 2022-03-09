@@ -1,15 +1,15 @@
 package be.ucll.quizmaster.quizmaster.service;
 
-import be.ucll.quizmaster.quizmaster.model.Question;
-import be.ucll.quizmaster.quizmaster.model.Quiz;
-import be.ucll.quizmaster.quizmaster.model.QuizQuestion;
+import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
+import be.ucll.quizmaster.quizmaster.repo.QuizQuestionRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -18,15 +18,17 @@ public class QuizQuestionService {
     private final Logger logger = LoggerFactory.getLogger(QuizQuestionService.class);
 
     private final QuestionRepo questionRepo;
+    private final ResultRepo resultRepo;
 
-    public QuizQuestionService(QuestionRepo questionRepo) {
+    public QuizQuestionService(QuestionRepo questionRepo, ResultRepo resultRepo) {
         this.questionRepo = questionRepo;
+        this.resultRepo = resultRepo;
     }
 
 
-    public Set<QuizQuestion> addQuestionsToQuizById(Quiz quiz, Set<Long> questionIds) {
+    public List<QuizQuestion> addQuestionsToQuizById(Quiz quiz, Set<Long> questionIds) {
 
-        Set<QuizQuestion> response = new HashSet<>();
+        List<QuizQuestion> response = new ArrayList<>();
 
         for (Long questionId : questionIds) {
 
@@ -40,6 +42,12 @@ public class QuizQuestionService {
         }
 
         return response;
+
+    }
+
+    public boolean quizQuestionHasResultForParticipation(QuizQuestion q, Participant currentParticipation) {
+
+        return resultRepo.existsByQuizQuestionAndAndParticipant(q, currentParticipation);
 
     }
 }

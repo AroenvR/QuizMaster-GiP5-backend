@@ -2,6 +2,7 @@ package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,13 +27,13 @@ public class Quiz {
     private Date endTime;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.PERSIST)
-    private Set<QuizQuestion> quizQuestions;
+    private List<QuizQuestion> quizQuestions;
 
     @ManyToOne()
     @JoinColumn(name = "host_id")
     private Member host;
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", fetch = FetchType.LAZY)
     private Set<Participant> participants;
 
     //TODO: mogelijke uitbreiding met custom intervals
@@ -108,8 +109,19 @@ public class Quiz {
         this.endTime = endTime;
     }
 
+    public List<QuizQuestion> getQuizQuestions() {
+        return quizQuestions;
+    }
 
-    public void setQuizQuestions(Set<QuizQuestion> quizQuestions) {
+    public Set<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Participant> participants) {
+        this.participants = participants;
+    }
+
+    public void setQuizQuestions(List<QuizQuestion> quizQuestions) {
         this.quizQuestions = quizQuestions;
     }
 
@@ -133,7 +145,7 @@ public class Quiz {
     public String toString() {
         return "Quiz{" +
                 "quizId=" + quizId +
-                ", host=" + host +
+                ", host=" + host.getUsername() +
                 ", title='" + title + '\'' +
                 ", code='" + code + '\'' +
                 ", startTime=" + startTime +
@@ -147,7 +159,7 @@ public class Quiz {
         private String code;
         private Date startTime;
         private Date endTime;
-        private Set<QuizQuestion> quizQuestions;
+        private List<QuizQuestion> quizQuestions;
         private Member host;
         private Set<Participant> participants;
 
@@ -179,7 +191,7 @@ public class Quiz {
             return this;
         }
 
-        public Builder quizQuestions(Set<QuizQuestion> val) {
+        public Builder quizQuestions(List<QuizQuestion> val) {
             quizQuestions = val;
             return this;
         }

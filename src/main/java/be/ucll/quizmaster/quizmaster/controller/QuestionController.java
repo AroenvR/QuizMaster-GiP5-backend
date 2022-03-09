@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+
 @RestController
 @RequestMapping("questions")
 public class QuestionController {
@@ -42,17 +44,18 @@ public class QuestionController {
 
 
     @GetMapping()
-    private ResponseEntity<?> getNextQuestion(){
+    private ResponseEntity<?> getNextQuestion(@RequestBody String answerToPrevious){
         logger.debug("GET next question called.");
 
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion());
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion(answerToPrevious));
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         catch (Exception e) {
             logger.debug(e.toString());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
