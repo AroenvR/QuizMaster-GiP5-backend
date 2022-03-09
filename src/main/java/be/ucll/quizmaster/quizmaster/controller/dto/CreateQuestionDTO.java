@@ -23,6 +23,9 @@ public class CreateQuestionDTO {
 
     private Set<CreateAnswerDTO> answersDTOs;
 
+    public CreateQuestionDTO() {
+    }
+
     public CreateQuestionDTO(long questionId, CreateQuestionDTO dto) {
         this.questionId = questionId;
         this.type = dto.type;

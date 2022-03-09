@@ -3,6 +3,7 @@ package be.ucll.quizmaster.quizmaster.controller;
 import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateAnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
+import be.ucll.quizmaster.quizmaster.service.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,8 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     private final Logger logger = LoggerFactory.getLogger(QuestionControllerTest.class);
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    QuestionService service;
 
     @Test
     void createQuestion() throws Exception {
@@ -43,8 +45,6 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 .answersDTOs(answers)
                 .build();
 
-
-
         MvcResult mvcPost = this.mockMvc.perform(MockMvcRequestBuilders.post("/questions")
                         .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,10 +53,6 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        CreateQuestionDTO savedQuestion = fromMvcResult(mvcPost, CreateQuestionDTO.class);
 
-        logger.debug(savedQuestion.getQuestionString());
-        logger.debug(savedQuestion.getDescription());
-        logger.debug(savedQuestion.getTopic());
     }
 }
