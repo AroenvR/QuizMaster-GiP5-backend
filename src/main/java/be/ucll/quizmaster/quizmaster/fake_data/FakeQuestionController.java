@@ -27,7 +27,7 @@ public class FakeQuestionController {
         // Set of questions for Games,
         Set<QuestionDTO> gamingSet = new HashSet<>();
 
-        List<String> trueOrFalse = new ArrayList<>();
+        Set<String> trueOrFalse = new HashSet<>();
         trueOrFalse.add("true");
         trueOrFalse.add("false");
 
@@ -41,7 +41,7 @@ public class FakeQuestionController {
                 .answers(trueOrFalse)
                 .build();
 
-        List<String> csGoAnswers = new ArrayList<>();
+        Set<String> csGoAnswers = new HashSet<>();
         csGoAnswers.add("19");
         csGoAnswers.add("34");
         csGoAnswers.add("69");
@@ -58,7 +58,7 @@ public class FakeQuestionController {
                 .answers(csGoAnswers)
                 .build();
 
-        List<String> lolAnswers = new ArrayList<>();
+        Set<String> lolAnswers = new HashSet<>();
         lolAnswers.add("baker");
         lolAnswers.add("taker");
         lolAnswers.add("shaker");
