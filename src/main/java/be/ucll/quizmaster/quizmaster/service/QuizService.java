@@ -145,7 +145,13 @@ public class QuizService {
 
 
     public Quiz getQuizPlayed(Member loggedInMember) {
-        return null;
-        //TODO
+        if (!participantService.isAlreadyInAQuiz(loggedInMember)){
+            throw new IllegalArgumentException("you need to join a quiz before you can get your first question");
+        }
+
+        Participant participation = participantService.getCurrentParticipation(loggedInMember);
+        return participation.getQuiz();
     }
+
+
 }

@@ -36,10 +36,14 @@ public class ParticipantService {
 
     @Transactional
     public void setCurrentQuizFinished(Member candidateToJoin) {
-        Participant currentParticipation = participantRepo.getParticipantByMemberAndFinishedIsFalse(candidateToJoin);
+        Participant currentParticipation = getCurrentParticipation(candidateToJoin);
         currentParticipation.setFinished(true);
         participantRepo.save(currentParticipation);
         logger.debug(candidateToJoin.getEmailAddress() + " his/her quiz is set to finished");
+    }
+
+    public Participant getCurrentParticipation(Member member) {
+        return participantRepo.getParticipantByMemberAndFinishedIsFalse(member).orElseThrow(() -> new RuntimeException("participation not found"));
     }
 
 

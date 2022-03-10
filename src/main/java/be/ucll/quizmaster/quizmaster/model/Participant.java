@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,7 +25,7 @@ public class Participant {
     private Quiz quiz;
 
     @OneToMany(mappedBy = "participant")
-    private Set<Result> results;
+    private List<Result> results;
 
 
     public Participant() {
@@ -69,7 +70,7 @@ public class Participant {
         this.quiz = quiz;
     }
 
-    public Set<Result> getResults() {
+    public List<Result> getResults() {
         return results;
     }
 
@@ -112,7 +113,7 @@ public class Participant {
         private long participantionId;
         private Member member;
         private Quiz quiz;
-        private Set<Result> results;
+        private List<Result> results;
         private boolean finished;
 
         public Builder() {
@@ -133,7 +134,7 @@ public class Participant {
             return this;
         }
 
-        public Builder results(Set<Result> val) {
+        public Builder results(List<Result> val) {
             results = val;
             return this;
         }
