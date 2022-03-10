@@ -14,7 +14,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("fake-topics")
-public class FakeTopicController {
+public class FakeTopicController {""
     private final Logger logger = LoggerFactory.getLogger(FakeTopicController.class);
 
     // A really bad representation of DB data.
