@@ -5,7 +5,6 @@ import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
-import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,13 +24,22 @@ public class QuestionService {
     private final LoginService loginService;
     private final QuizQuestionService quizQuestionService;
     private final ParticipantService participantService;
+    private final ResultService resultService;
+    private final AnswerService answerService;
 
-    public QuestionService(QuestionRepo questionRepo, TopicService topicService, LoginService loginService, QuizService quizService, QuizQuestionService quizQuestionService, ParticipantService participantService) {
+    public QuestionService(QuestionRepo questionRepo,
+                           TopicService topicService,
+                           LoginService loginService,
+                           QuizQuestionService quizQuestionService,
+                           ParticipantService participantService,
+                           ResultService resultService, AnswerService answerService) {
         this.questionRepo = questionRepo;
         this.topicService = topicService;
         this.loginService = loginService;
         this.quizQuestionService = quizQuestionService;
         this.participantService = participantService;
+        this.resultService = resultService;
+        this.answerService = answerService;
     }
 
     @Transactional
@@ -66,9 +73,9 @@ public class QuestionService {
         Question saved = questionRepo.save(toSave);
         logger.info("SAVED: " + saved.toString());
         return new CreateQuestionDTO(saved.getQuestionId(), dto);
+
     }
 
-    @Transactional
     public QuestionDTO getNextQuestion(String answerToPrevious) throws NotAuthenticatedException {
 
         Member loggedInMember = loginService.getLoggedInMember("only members can get a question");
@@ -82,48 +89,31 @@ public class QuestionService {
             throw new IllegalArgumentException("The quiz is closed.");
         }
 
-        Question previousQuestion;
-        for (QuizQuestion q : quizPlayed.getQuizQuestions()) {
-            if (!quizQuestionService.quizQuestionHasResultForParticipation(q, currentParticipation)) {
 
-                previousQuestion = q.getQuestion();
-                logger.debug(previousQuestion.toString());
-
-                Result r = new Result.Builder()
-                        .answerGiven(answerToPrevious)
-                        .quizQuestion(q)
-                        .isCorrect(true)
-                        .participant(currentParticipation)
-                        .startTime(new Date())
-                        .endTime(new Date())
-                        .build();
-                q.addResult(r);
-
-            }
+        if(!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)){
+            logger.debug("member already got a question from this quiz.");
+            saveAnswerGiven(answerToPrevious, quizPlayed, currentParticipation);
+        } else {
+            logger.debug("this is the first question for this member in this quiz.");
         }
 
-        Question nextQuestion = null;
-        for (QuizQuestion q : quizPlayed.getQuizQuestions()) {
-            if (!quizQuestionService.quizQuestionHasResultForParticipation(q, currentParticipation)) {
-                nextQuestion = q.getQuestion();
-                logger.debug(nextQuestion.toString());
-            }
-        }
+        Question nextQuestion = prepareNextQuestion(quizPlayed, currentParticipation);
 
-        if (nextQuestion == null) throw new QuizFinishedException("you have finished this quiz.");
 
-        Set<String> answers = nextQuestion.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toSet());
+        return null;
 
-        return new QuestionDTO.Builder()
-                .questionString(nextQuestion.getQuestionString())
-                .description(nextQuestion.getDescription())
-                .answers(answers)
-                .type(nextQuestion.getType())
-                .topic(nextQuestion.getTopic().getName())
-                .isBreak(false)
-                .quizTitle(quizPlayed.getTitle())
-                .build();
+    }
 
+
+    @Transactional
+    public void saveAnswerGiven(String answerToPrevious, Quiz quizPlayed, Participant currentParticipation) {
+
+        QuizQuestion q = quizQuestionService.findUnansweredQuizQuestion(quizPlayed, currentParticipation);
+
+    }
+
+    private Question prepareNextQuestion(Quiz quizPlayed, Participant currentParticipation) {
+        return null;
     }
 
 
@@ -185,7 +175,6 @@ public class QuestionService {
 
     }
 
-
     private void setAnswersInQuestion(Question toSave, List<String> answers) {
         switch (toSave.getType()) {
             case 1: //multiple choice
@@ -215,6 +204,7 @@ public class QuestionService {
         }
 
     }
+
 
 
 }

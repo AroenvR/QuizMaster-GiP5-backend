@@ -24,9 +24,8 @@ public class Participant {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "participant")
+    @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY)
     private List<Result> results;
-
 
     public Participant() {
     }
@@ -86,6 +85,10 @@ public class Participant {
         this.finished = finished;
     }
 
+    public void setResults(List<Result> results) {
+        this.results = results;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,13 +104,9 @@ public class Participant {
 
     @Override
     public String toString() {
-        return "Participant{" +
-                "participantionId=" + participantionId +
-                ", member=" + member.getEmailAddress() +
-                ", quiz=" + quiz.getCode() +
-                ", results=" + results +
-                '}';
+        return "de toString van Participant";
     }
+
 
     public static final class Builder {
         private long participantionId;

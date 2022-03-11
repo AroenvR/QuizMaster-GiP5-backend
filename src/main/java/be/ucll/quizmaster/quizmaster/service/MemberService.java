@@ -32,6 +32,7 @@ public class MemberService {
     @Transactional
     public MemberDTO saveMember(MemberDTO memberDto) throws EmailExistsException, UsernameExistsException {
 
+
         if (emailExists(memberDto.getEmail())) {
             throw new EmailExistsException(
                     "There is already an account with that email adress: " + memberDto.getEmail());

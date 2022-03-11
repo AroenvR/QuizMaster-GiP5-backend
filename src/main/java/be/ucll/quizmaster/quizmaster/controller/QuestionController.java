@@ -33,7 +33,7 @@ public class QuestionController {
 
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
         catch (Exception e) {
             logger.debug(e.toString());
@@ -51,14 +51,17 @@ public class QuestionController {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion(answerToPrevious));
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
         catch (Exception e) {
             logger.debug(e.toString());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
+        //TODO: teapot when quiz is done
     }
+
+
+
 
 }

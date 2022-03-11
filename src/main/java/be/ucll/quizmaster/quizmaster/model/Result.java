@@ -58,7 +58,7 @@ public class Result {
         return resultId;
     }
 
-    private void setResultId(long resultId) {
+    public void setResultId(long resultId) {
         this.resultId = resultId;
     }
 
@@ -82,7 +82,7 @@ public class Result {
         return answerGiven;
     }
 
-    private void setAnswerGiven(String answerGiven) {
+    public void setAnswerGiven(String answerGiven) {
         this.answerGiven = answerGiven;
     }
 
@@ -90,7 +90,7 @@ public class Result {
         return isCorrect;
     }
 
-    private void setIsCorrect(boolean isCorrect) {
+    public void setIsCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
 
@@ -98,7 +98,7 @@ public class Result {
         return startTime;
     }
 
-    private void setStartTime(Date startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -106,8 +106,16 @@ public class Result {
         return endTime;
     }
 
-    private void setEndTime(Date endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
     }
 
     @Override
@@ -128,15 +136,7 @@ public class Result {
 
     @Override
     public String toString() {
-        return "Result{" +
-                "resultId=" + resultId +
-                ", quizQuestion=" + quizQuestion +
-                ", participant=" + participant.getParticipantionId() +
-                ", answerGiven='" + answerGiven + '\'' +
-                ", isCorrect='" + isCorrect + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
+        return "de toString van RESULT";
     }
 
     public static final class Builder {
