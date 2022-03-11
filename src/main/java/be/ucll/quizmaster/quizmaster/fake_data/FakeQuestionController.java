@@ -1,5 +1,6 @@
 package be.ucll.quizmaster.quizmaster.fake_data;
 
+import be.ucll.quizmaster.quizmaster.controller.dto.ChooseQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +23,16 @@ public class FakeQuestionController {
 
     // A really bad representation of DB data.
     @GetMapping("/{topic}")
-    public ResponseEntity<Set<QuestionDTO>> getAllForTopic(@PathVariable String topic) {
+    public ResponseEntity<Set<ChooseQuestionDTO>> getAllForTopic(@PathVariable String topic) {
 
         // Set of questions for Games,
-        Set<QuestionDTO> gamingSet = new HashSet<>();
+        Set<ChooseQuestionDTO> gamingSet = new HashSet<>();
 
         Set<String> trueOrFalse = new HashSet<>();
         trueOrFalse.add("true");
         trueOrFalse.add("false");
 
-        QuestionDTO wow = new QuestionDTO.Builder()
+        ChooseQuestionDTO wow = new ChooseQuestionDTO.Builder()
                 .questionId(1L)
                 .topic("Gaming")
                 .questionString("Is World of Warcraft an MMO?")
@@ -47,7 +48,7 @@ public class FakeQuestionController {
         csGoAnswers.add("42");
         csGoAnswers.add("28");
 
-        QuestionDTO csgo = new QuestionDTO.Builder()
+        ChooseQuestionDTO csgo = new ChooseQuestionDTO.Builder()
                 .questionId(2L)
                 .topic("Gaming")
                 .questionString("How many guns are purchasable in CS:GO?")
@@ -62,7 +63,7 @@ public class FakeQuestionController {
         lolAnswers.add("shaker");
         lolAnswers.add("maker");
 
-        QuestionDTO lol = new QuestionDTO.Builder()
+        ChooseQuestionDTO lol = new ChooseQuestionDTO.Builder()
                 .questionId(3L)
                 .topic("Gaming")
                 .questionString("Faker, Faker play ...!")
@@ -76,9 +77,9 @@ public class FakeQuestionController {
         gamingSet.add(lol);
 
         // Set of questions for Nature.
-        Set<QuestionDTO> natureSet = new HashSet<>();
+        Set<ChooseQuestionDTO> natureSet = new HashSet<>();
 
-        QuestionDTO cows = new QuestionDTO.Builder()
+        ChooseQuestionDTO cows = new ChooseQuestionDTO.Builder()
                 .questionId(4L)
                 .topic("Nature")
                 .questionString("Cows kill more people than sharks.")
@@ -91,9 +92,9 @@ public class FakeQuestionController {
 
 
         // Set of questions for Space.
-        Set<QuestionDTO> spaceSet = new HashSet<>();
+        Set<ChooseQuestionDTO> spaceSet = new HashSet<>();
 
-        QuestionDTO silence = new QuestionDTO.Builder()
+        ChooseQuestionDTO silence = new ChooseQuestionDTO.Builder()
                 .questionId(5L)
                 .topic("Space")
                 .questionString("Is space completely silent?")

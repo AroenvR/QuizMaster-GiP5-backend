@@ -1,18 +1,12 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
-import be.ucll.quizmaster.quizmaster.model.Answer;
-import be.ucll.quizmaster.quizmaster.model.Question;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class QuestionDTO {
+public class ChooseQuestionDTO {
 
     private long questionId;
-
-    private String quizTitle;
 
     private String questionString;
 
@@ -20,23 +14,19 @@ public class QuestionDTO {
 
     private Set<String> answers;
 
-    @JsonProperty("break")
-    private boolean isBreak;
-
     private String topic;
 
     private String description;
 
-    public QuestionDTO() {
+
+    public ChooseQuestionDTO() {
     }
 
-    private QuestionDTO(Builder builder) {
+    private ChooseQuestionDTO(Builder builder) {
         setQuestionId(builder.questionId);
-        setQuizTitle(builder.quizTitle);
         setQuestionString(builder.questionString);
         setType(builder.type);
         setAnswers(builder.answers);
-        setBreak(builder.isBreak);
         setTopic(builder.topic);
         setDescription(builder.description);
     }
@@ -48,14 +38,6 @@ public class QuestionDTO {
 
     public void setQuestionId(long questionId) {
         this.questionId = questionId;
-    }
-
-    public String getQuizTitle() {
-        return quizTitle;
-    }
-
-    public void setQuizTitle(String quizTitle) {
-        this.quizTitle = quizTitle;
     }
 
     public String getQuestionString() {
@@ -82,14 +64,6 @@ public class QuestionDTO {
         this.answers = answers;
     }
 
-    public boolean isBreak() {
-        return isBreak;
-    }
-
-    public void setBreak(boolean aBreak) {
-        isBreak = aBreak;
-    }
-
     public String getTopic() {
         return topic;
     }
@@ -108,11 +82,9 @@ public class QuestionDTO {
 
     public static final class Builder {
         private long questionId;
-        private String quizTitle;
         private String questionString;
         private int type;
         private Set<String> answers;
-        private boolean isBreak;
         private String topic;
         private String description;
 
@@ -121,11 +93,6 @@ public class QuestionDTO {
 
         public Builder questionId(long val) {
             questionId = val;
-            return this;
-        }
-
-        public Builder quizTitle(String val) {
-            quizTitle = val;
             return this;
         }
 
@@ -144,11 +111,6 @@ public class QuestionDTO {
             return this;
         }
 
-        public Builder isBreak(boolean val) {
-            isBreak = val;
-            return this;
-        }
-
         public Builder topic(String val) {
             topic = val;
             return this;
@@ -159,8 +121,8 @@ public class QuestionDTO {
             return this;
         }
 
-        public QuestionDTO build() {
-            return new QuestionDTO(this);
+        public ChooseQuestionDTO build() {
+            return new ChooseQuestionDTO(this);
         }
     }
 }
