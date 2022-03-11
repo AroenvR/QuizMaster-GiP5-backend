@@ -9,8 +9,8 @@ import java.util.Set;
 public class CreateQuizDTO {
 
 
-    //@JsonProperty("title")
-    private String title;
+    @JsonProperty("quizTitle")
+    private String quizTitle;
 
     //@JsonProperty("startTime")
     private Date startTime;
@@ -21,17 +21,16 @@ public class CreateQuizDTO {
     private Set<Long> questionIds;
 
 
-
     public CreateQuizDTO() {
     }
 
 
     public String getTitle() {
-        return title;
+        return quizTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.quizTitle = title;
     }
 
     public Date getStartTime() {
@@ -62,7 +61,7 @@ public class CreateQuizDTO {
     @Override
     public String toString() {
         return "CreateQuizDTO{" +
-                "title='" + title + '\'' +
+                "quizTitle='" + quizTitle + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", questionIds=" + questionIds +
