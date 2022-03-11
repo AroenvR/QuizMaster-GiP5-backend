@@ -32,12 +32,11 @@ public class FakeQuestionController {
         trueOrFalse.add("false");
 
         QuestionDTO wow = new QuestionDTO.Builder()
+                .questionId(1L)
                 .topic("Gaming")
                 .questionString("Is World of Warcraft an MMO?")
                 .type(2)
                 .description("Select the correct answer.")
-                .quizTitle("Quiz_Title")
-                .isBreak(false)
                 .answers(trueOrFalse)
                 .build();
 
@@ -49,12 +48,11 @@ public class FakeQuestionController {
         csGoAnswers.add("28");
 
         QuestionDTO csgo = new QuestionDTO.Builder()
+                .questionId(2L)
                 .topic("Gaming")
                 .questionString("How many guns are purchasable in CS:GO?")
                 .type(1)
                 .description("Select the correct answer.")
-                .quizTitle("Quiz_Title")
-                .isBreak(false)
                 .answers(csGoAnswers)
                 .build();
 
@@ -65,12 +63,11 @@ public class FakeQuestionController {
         lolAnswers.add("maker");
 
         QuestionDTO lol = new QuestionDTO.Builder()
+                .questionId(3L)
                 .topic("Gaming")
                 .questionString("Faker, Faker play ...!")
                 .type(3)
                 .description("Fill in your answer.")
-                .quizTitle("Quiz_Title")
-                .isBreak(false)
                 .answers(lolAnswers)
                 .build();
 
@@ -82,12 +79,11 @@ public class FakeQuestionController {
         Set<QuestionDTO> natureSet = new HashSet<>();
 
         QuestionDTO cows = new QuestionDTO.Builder()
+                .questionId(4L)
                 .topic("Nature")
                 .questionString("Cows kill more people than sharks.")
                 .type(2)
                 .description("Select the correct answer.")
-                .quizTitle("Quiz_Title")
-                .isBreak(false)
                 .answers(trueOrFalse)
                 .build();
 
@@ -98,12 +94,11 @@ public class FakeQuestionController {
         Set<QuestionDTO> spaceSet = new HashSet<>();
 
         QuestionDTO silence = new QuestionDTO.Builder()
+                .questionId(5L)
                 .topic("Space")
                 .questionString("Is space completely silent?")
                 .type(2)
                 .description("Select the correct answer.")
-                .quizTitle("Quiz_Title")
-                .isBreak(false)
                 .answers(trueOrFalse)
                 .build();
 
