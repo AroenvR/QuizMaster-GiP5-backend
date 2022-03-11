@@ -1,16 +1,11 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
-import be.ucll.quizmaster.quizmaster.model.Answer;
-import be.ucll.quizmaster.quizmaster.model.Question;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class QuestionDTO {
-
-    private long questionId;
 
     private String quizTitle;
 
@@ -31,7 +26,6 @@ public class QuestionDTO {
     }
 
     private QuestionDTO(Builder builder) {
-        setQuestionId(builder.questionId);
         setQuizTitle(builder.quizTitle);
         setQuestionString(builder.questionString);
         setType(builder.type);
@@ -42,13 +36,6 @@ public class QuestionDTO {
     }
 
 
-    public long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(long questionId) {
-        this.questionId = questionId;
-    }
 
     public String getQuizTitle() {
         return quizTitle;
@@ -107,7 +94,6 @@ public class QuestionDTO {
     }
 
     public static final class Builder {
-        private long questionId;
         private String quizTitle;
         private String questionString;
         private int type;
@@ -117,11 +103,6 @@ public class QuestionDTO {
         private String description;
 
         public Builder() {
-        }
-
-        public Builder questionId(long val) {
-            questionId = val;
-            return this;
         }
 
         public Builder quizTitle(String val) {

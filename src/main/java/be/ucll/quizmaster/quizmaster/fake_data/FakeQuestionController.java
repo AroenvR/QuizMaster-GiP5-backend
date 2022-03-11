@@ -1,7 +1,6 @@
 package be.ucll.quizmaster.quizmaster.fake_data;
 
 import be.ucll.quizmaster.quizmaster.controller.dto.ChooseQuestionDTO;
-import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

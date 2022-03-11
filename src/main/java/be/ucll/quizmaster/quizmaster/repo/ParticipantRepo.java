@@ -14,7 +14,7 @@ public interface ParticipantRepo extends JpaRepository<Participant, Long> {
 
     boolean existsByQuizAndMember(Quiz quiz, Member member);
 
-    boolean existsByMember(Member member);
+    boolean existsByMemberAndFinishedIsFalse(Member member);
 
     Optional<Participant> getParticipantByMemberAndFinishedIsFalse(Member member);
 

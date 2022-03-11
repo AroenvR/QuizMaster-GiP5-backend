@@ -5,6 +5,7 @@ import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
+import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -80,7 +81,11 @@ public class QuestionService {
 
         Member loggedInMember = loginService.getLoggedInMember("only members can get a question");
 
-        Participant currentParticipation = participantService.getCurrentParticipation(loggedInMember);
+        Participant currentParticipation = participantService.getCurrentParticipation(loggedInMember).orElseThrow(
+                () -> new RuntimeException("you need to join a quiz before you can get your first question")
+        );
+
+
         Quiz quizPlayed = currentParticipation.getQuiz();
 
         if (quizPlayed.getStartTime().after(new Date())) {
@@ -90,30 +95,55 @@ public class QuestionService {
         }
 
 
-        if(!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)){
+        if (!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)) {
             logger.debug("member already got a question from this quiz.");
-            saveAnswerGiven(answerToPrevious, quizPlayed, currentParticipation);
+            resultService.saveAnswerGiven(answerToPrevious, quizPlayed, currentParticipation);
         } else {
             logger.debug("this is the first question for this member in this quiz.");
         }
 
-        Question nextQuestion = prepareNextQuestion(quizPlayed, currentParticipation);
+        Question q = prepareNextQuestion(quizPlayed, currentParticipation);
+        logger.debug(q.toString());
 
 
-        return null;
-
-    }
-
-
-    @Transactional
-    public void saveAnswerGiven(String answerToPrevious, Quiz quizPlayed, Participant currentParticipation) {
-
-        QuizQuestion q = quizQuestionService.findUnansweredQuizQuestion(quizPlayed, currentParticipation);
+        QuestionDTO response = new QuestionDTO.Builder()
+                .questionString(q.getQuestionString())
+                .description(q.getDescription())
+                .type(q.getType())
+                .topic(q.getTopic().getName())
+                .answers(q.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toSet()))
+                .isBreak(false) //TODO set break in between
+                .quizTitle(quizPlayed.getTitle())
+                .build();
+        logger.info("NEXT Question -> " + q.toString());
+        return response;
 
     }
 
     private Question prepareNextQuestion(Quiz quizPlayed, Participant currentParticipation) {
-        return null;
+
+        QuizQuestion nextQuizQuestion;
+        try {
+            nextQuizQuestion = quizQuestionService.findQuizQuestionToBeStarted(quizPlayed, currentParticipation);
+        } catch (QuizFinishedException quizFinishedException) {
+            participantService.setCurrentQuizFinished(currentParticipation.getMember());
+            throw quizFinishedException;
+        }
+
+        Result resultForNextQuestion = new Result.Builder()
+                .quizQuestion(nextQuizQuestion)
+                .participant(currentParticipation)
+                .startTime(new Date())
+                .isCorrect(false)
+                .build();
+
+        resultService.saveResult(resultForNextQuestion);
+
+        Question nextQuestion = nextQuizQuestion.getQuestion();
+        logger.debug("next question = " + nextQuestion.toString());
+
+        return nextQuestion;
+
     }
 
 
@@ -204,7 +234,6 @@ public class QuestionService {
         }
 
     }
-
 
 
 }

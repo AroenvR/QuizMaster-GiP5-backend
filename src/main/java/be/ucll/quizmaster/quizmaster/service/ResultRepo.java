@@ -10,11 +10,9 @@ import java.util.Optional;
 
 public interface ResultRepo extends JpaRepository<Result, Long> {
 
-    boolean existsByQuizQuestionAndAndParticipant(QuizQuestion quizQuestion, Participant participant);
+    boolean existsByQuizQuestionAndParticipant(QuizQuestion quizQuestion, Participant participant);
 
-
-    boolean existsByQuizQuestionAndAndParticipantAndIsCorrectIsNullAndEndTimeIsNull(QuizQuestion quizQuestion, Participant participant);
-
+    boolean existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(QuizQuestion quizQuestion, Participant participant);
 
     Optional<Result> getByQuizQuestionAndParticipant(QuizQuestion quizQuestion, Participant participant);
 

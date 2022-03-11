@@ -4,6 +4,7 @@ import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.service.QuestionService;
 import be.ucll.quizmaster.quizmaster.service.QuizService;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
+import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -52,13 +53,13 @@ public class QuestionController {
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-        catch (Exception e) {
-            logger.debug(e.toString());
-            e.printStackTrace();
+        } catch (QuizFinishedException e) {
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        //TODO: teapot when quiz is done
+
     }
 
 

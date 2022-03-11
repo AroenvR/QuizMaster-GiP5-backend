@@ -2,6 +2,8 @@ package be.ucll.quizmaster.quizmaster.service;
 
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
+import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,18 @@ public class QuizQuestionService {
 
     private final QuestionRepo questionRepo;
     private final ResultRepo resultRepo;
+    private final LoginService loginService;
 
-    public QuizQuestionService(QuestionRepo questionRepo, ResultRepo resultRepo) {
+    public QuizQuestionService(QuestionRepo questionRepo, ResultRepo resultRepo, LoginService loginService) {
         this.questionRepo = questionRepo;
         this.resultRepo = resultRepo;
+        this.loginService = loginService;
     }
 
 
-    public List<QuizQuestion> addQuestionsToQuizById(Quiz quiz, Set<Long> questionIds) {
+    public List<QuizQuestion> addQuestionsToQuizById(Quiz quiz, Set<Long> questionIds, Member host) {
+
+
 
         List<QuizQuestion> response = new ArrayList<>();
 
@@ -34,6 +40,10 @@ public class QuizQuestionService {
             Question question = questionRepo.findById(questionId).orElseThrow(
                     () ->  new EntityNotFoundException("no question found with id: " + questionId)
             );
+
+            if (!question.getMember().equals(host)){
+                throw new IllegalArgumentException("You don't have access to question '" + question.getQuestionString() + "', you can only add questions you created.");
+            }
 
             response.add(new QuizQuestion(question, quiz));
             logger.info(question.getQuestionString() + " add to " + quiz.getTitle());
@@ -70,20 +80,36 @@ public class QuizQuestionService {
     }*/
 
 
-    public QuizQuestion findUnansweredQuizQuestion(Quiz quiz, Participant participant) {
+    public QuizQuestion findQuizQuestionToBeAnswered(@NotNull Quiz quiz, Participant participant) {
 
-        return null;
+        for (QuizQuestion qq : quiz.getQuizQuestions()) {
+            if (resultRepo.existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(qq, participant) ){
+                return qq;
+            }
+        }
+        throw new RuntimeException("TODO");
 
     }
 
-    public boolean isFirstQuestionFromQuiz(Quiz quizPlayed, Participant participation) {
+    public boolean isFirstQuestionFromQuiz(@NotNull Quiz quizPlayed, Participant participation) {
 
         for (QuizQuestion qq : quizPlayed.getQuizQuestions()) {
-            if (resultRepo.existsByQuizQuestionAndAndParticipant(qq, participation)){
+            if (resultRepo.existsByQuizQuestionAndParticipant(qq, participation)){
                 return false;
             }
         }
         return true;
+
+    }
+
+    public QuizQuestion findQuizQuestionToBeStarted(Quiz quiz, Participant participant) {
+
+        for (QuizQuestion qq : quiz.getQuizQuestions()) {
+            if (!resultRepo.existsByQuizQuestionAndParticipant(qq, participant) ){
+                return qq;
+            }
+        }
+        throw new QuizFinishedException("You have finished this quiz.");
 
     }
 }

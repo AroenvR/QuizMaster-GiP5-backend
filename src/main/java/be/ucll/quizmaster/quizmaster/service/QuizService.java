@@ -59,7 +59,7 @@ public class QuizService {
                 .endTime(dto.getEndTime())
                 .build();
 
-        toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds()));
+        toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds(), host));
 
         Quiz saved = quizRepo.save(toSave);
         logger.debug("\nSAVED: " + saved.toString());
@@ -80,10 +80,10 @@ public class QuizService {
         Quiz quizToJoin = quizRepo.getByCode(quizCode);
 
         if (candidateToJoin.equals(quizToJoin.getHost())){
-            throw new IllegalArgumentException("nice try ;) the host of a quiz can not join a quiz");
+            throw new IllegalArgumentException("nice try ;) the host can not join his own quiz");
         }
 
-        if (participantService.isAlreadyInAQuiz(candidateToJoin)) {
+        if (participantService.isAlreadyInQuizAndNotFinished(candidateToJoin)) {
             if (participantService.isAlreadyInThisQuiz(candidateToJoin, quizToJoin)) {
                 throw new IllegalArgumentException("You can only participate once in a quiz");
             } else {
@@ -141,16 +141,6 @@ public class QuizService {
         }
         logger.debug("quiz code is " + code);
         return code;
-    }
-
-
-    public Quiz getQuizPlayed(Member loggedInMember) {
-        if (!participantService.isAlreadyInAQuiz(loggedInMember)){
-            throw new IllegalArgumentException("you need to join a quiz before you can get your first question");
-        }
-
-        Participant participation = participantService.getCurrentParticipation(loggedInMember);
-        return participation.getQuiz();
     }
 
 

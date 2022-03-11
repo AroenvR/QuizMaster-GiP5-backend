@@ -136,7 +136,15 @@ public class Result {
 
     @Override
     public String toString() {
-        return "de toString van RESULT";
+        return "Result{" +
+                "resultId=" + resultId +
+                ", quizQuestion=" + quizQuestion +
+                ", participant=" + participant.getParticipantionId() +
+                ", answerGiven='" + answerGiven + '\'' +
+                ", isCorrect=" + isCorrect +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 
     public static final class Builder {

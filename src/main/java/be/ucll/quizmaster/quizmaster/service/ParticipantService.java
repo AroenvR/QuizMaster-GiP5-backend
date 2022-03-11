@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ParticipantService {
 
@@ -30,20 +32,22 @@ public class ParticipantService {
 
     }
 
-    public boolean isAlreadyInAQuiz(Member candidateToJoin) {
-        return participantRepo.existsByMember(candidateToJoin);
+    public boolean isAlreadyInQuizAndNotFinished(Member candidateToJoin) {
+        return participantRepo.existsByMemberAndFinishedIsFalse(candidateToJoin);
     }
 
     @Transactional
     public void setCurrentQuizFinished(Member candidateToJoin) {
-        Participant currentParticipation = getCurrentParticipation(candidateToJoin);
+        Participant currentParticipation = getCurrentParticipation(candidateToJoin).orElseThrow(
+                () -> new IllegalArgumentException("participation not found")
+        );
         currentParticipation.setFinished(true);
         participantRepo.save(currentParticipation);
         logger.debug(candidateToJoin.getEmailAddress() + " his/her quiz is set to finished");
     }
 
-    public Participant getCurrentParticipation(Member member) {
-        return participantRepo.getParticipantByMemberAndFinishedIsFalse(member).orElseThrow(() -> new RuntimeException("participation not found"));
+    public Optional<Participant> getCurrentParticipation(Member member) {
+        return participantRepo.getParticipantByMemberAndFinishedIsFalse(member);
     }
 
 

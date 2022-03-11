@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class Participant {
     private Quiz quiz;
 
     @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY)
-    private List<Result> results;
+    private List<Result> results = new ArrayList<>();
 
     public Participant() {
     }
@@ -104,9 +105,14 @@ public class Participant {
 
     @Override
     public String toString() {
-        return "de toString van Participant";
+        return "Participant{" +
+                "participantionId=" + participantionId +
+                ", finished=" + finished +
+                ", member=" + member.getEmailAddress() +
+                ", quiz=" + quiz.getCode() +
+                ", results size =" + results +
+                '}';
     }
-
 
     public static final class Builder {
         private long participantionId;
