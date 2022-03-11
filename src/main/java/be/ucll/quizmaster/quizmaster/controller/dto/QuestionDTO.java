@@ -1,9 +1,12 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
+import be.ucll.quizmaster.quizmaster.model.Answer;
+import be.ucll.quizmaster.quizmaster.model.Question;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class QuestionDTO {
 
@@ -24,6 +27,7 @@ public class QuestionDTO {
 
     public QuestionDTO() {
     }
+
 
     private QuestionDTO(Builder builder) {
         setQuizTitle(builder.quizTitle);

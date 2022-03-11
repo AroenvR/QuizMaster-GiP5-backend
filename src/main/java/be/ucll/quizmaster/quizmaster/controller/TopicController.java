@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -31,9 +33,9 @@ public class TopicController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping()
-    public ResponseEntity<Set<TopicDTO>> getAll(){
+    public ResponseEntity<List<TopicDTO>> getAll(){
 
-        Set<TopicDTO> topics = new HashSet<>();
+        List<TopicDTO> topics = new ArrayList<>();
         topics.add(new TopicDTO("COD"));
         topics.add(new TopicDTO("WOW"));
         topics.add(new TopicDTO("CSGO"));

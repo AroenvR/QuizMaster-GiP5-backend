@@ -2,7 +2,6 @@ package be.ucll.quizmaster.quizmaster.service;
 
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
-import be.ucll.quizmaster.quizmaster.repo.QuizQuestionRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,9 +44,46 @@ public class QuizQuestionService {
 
     }
 
+/*    public QuizQuestion findNextQuizQuestionWithoutEndTime(Quiz quizPlayed, Participant currentParticipation) {
+        for (QuizQuestion qq : quizPlayed.getQuizQuestions()) {
+            if (!quizQuestionHasResultForParticipation(qq, currentParticipation)){
+                return qq;
+            }
+        }
+        throw new RuntimeException("no question found without a answer given.");
+    }
+
     public boolean quizQuestionHasResultForParticipation(QuizQuestion q, Participant currentParticipation) {
 
-        return resultRepo.existsByQuizQuestionAndAndParticipant(q, currentParticipation);
+        return resultRepo.existsByQuizQuestionAndAndParticipantAndIsCorrectIsNullAndEndTimeIsNull(q, currentParticipation);
+
+    }
+
+
+    public boolean isFirstQuestion(Quiz quiz, Participant participant) {
+        for (QuizQuestion q : quiz.getQuizQuestions()) {
+            if (quizQuestionHasResultForParticipation(q, participant)){
+                return false;
+            }
+        }
+        return true;
+    }*/
+
+
+    public QuizQuestion findUnansweredQuizQuestion(Quiz quiz, Participant participant) {
+
+        return null;
+
+    }
+
+    public boolean isFirstQuestionFromQuiz(Quiz quizPlayed, Participant participation) {
+
+        for (QuizQuestion qq : quizPlayed.getQuizQuestions()) {
+            if (resultRepo.existsByQuizQuestionAndAndParticipant(qq, participation)){
+                return false;
+            }
+        }
+        return true;
 
     }
 }
