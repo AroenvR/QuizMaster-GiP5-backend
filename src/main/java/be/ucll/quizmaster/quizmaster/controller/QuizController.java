@@ -38,8 +38,8 @@ public class QuizController {
 
     }
 
-    @PostMapping("/{code}")
-    private ResponseEntity<?> joinQuiz(@PathVariable String code) {
+    @GetMapping()
+    private ResponseEntity<?> joinQuiz(@RequestParam(value = "code") String code) {
 
         logger.debug("JOIN quiz called.");
         try {

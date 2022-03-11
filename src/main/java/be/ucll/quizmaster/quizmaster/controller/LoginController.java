@@ -28,7 +28,7 @@ public class LoginController {
             loginService.getLoggedInMember("email or password is not valid.");
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email or password combination did not match.");
         }
     }
 

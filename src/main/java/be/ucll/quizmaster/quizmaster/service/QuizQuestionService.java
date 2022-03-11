@@ -3,7 +3,6 @@ package be.ucll.quizmaster.quizmaster.service;
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -80,7 +79,7 @@ public class QuizQuestionService {
     }*/
 
 
-    public QuizQuestion findQuizQuestionToBeAnswered(@NotNull Quiz quiz, Participant participant) {
+    public QuizQuestion findQuizQuestionToBeAnswered(Quiz quiz, Participant participant) {
 
         for (QuizQuestion qq : quiz.getQuizQuestions()) {
             if (resultRepo.existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(qq, participant) ){
@@ -91,7 +90,7 @@ public class QuizQuestionService {
 
     }
 
-    public boolean isFirstQuestionFromQuiz(@NotNull Quiz quizPlayed, Participant participation) {
+    public boolean isFirstQuestionFromQuiz(Quiz quizPlayed, Participant participation) {
 
         for (QuizQuestion qq : quizPlayed.getQuizQuestions()) {
             if (resultRepo.existsByQuizQuestionAndParticipant(qq, participation)){
