@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -19,8 +21,8 @@ public class FakeTopicController {
 
     // A really bad representation of DB data.
     @GetMapping()
-    public ResponseEntity<Set<TopicDTO>> getAll(){
-        Set<TopicDTO> topics = new HashSet<>();
+    public ResponseEntity<List<TopicDTO>> getAll(){
+        List<TopicDTO> topics = new ArrayList<>();
         topics.add(new TopicDTO("Gaming"));
         topics.add(new TopicDTO("Nature"));
         topics.add(new TopicDTO("Space"));
