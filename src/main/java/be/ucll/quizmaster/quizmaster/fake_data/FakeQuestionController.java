@@ -1,14 +1,13 @@
 package be.ucll.quizmaster.quizmaster.fake_data;
 
 import be.ucll.quizmaster.quizmaster.controller.dto.ChooseQuestionDTO;
+import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
+import liquibase.pro.packaged.Q;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +18,84 @@ import java.util.Set;
 @RequestMapping("fake-questions")
 public class FakeQuestionController {
     private final Logger logger = LoggerFactory.getLogger(FakeQuestionController.class);
+
+    // A really bad representation of DB data.
+    int counter = 0;
+    @GetMapping()
+    private ResponseEntity<?> getNextQuestion(@RequestParam(value = "get-next") String answerToPrevious) {
+        logger.error("Counter is at: " + counter);
+        logger.error("Answer to previous: " + answerToPrevious);
+
+        Set<String> answers = new HashSet<>();
+        answers.add("4");
+        answers.add("8");
+        answers.add("16");
+        answers.add("128");
+
+        QuestionDTO multipleChoice = new QuestionDTO.Builder()
+                .isBreak(false)
+                .quizTitle("Fake Quiz")
+                .type(1)
+                .questionString("How much is 2 + 2?")
+                .description("Select the correct answer!")
+                .topic("Mathematics")
+                .answers(answers)
+                .build();
+
+        answers = new HashSet<>();
+        answers.add("4");
+
+        QuestionDTO fillInTheBlank = new QuestionDTO.Builder()
+                .isBreak(false)
+                .quizTitle("Fake Quiz")
+                .type(3)
+                .questionString("2 + 2 = ?")
+                .description("Fill in the correct answer!")
+                .topic("Mathematics")
+                .answers(answers)
+                .build();
+
+        answers = new HashSet<>();
+        answers.add("true");
+        answers.add("false");
+        QuestionDTO trueOrFalse = new QuestionDTO.Builder()
+                .isBreak(false)
+                .quizTitle("Fake Quiz")
+                .type(2)
+                .questionString("2 + 2 = 4")
+                .description("Select the correct answer!")
+                .topic("Mathematics")
+                .answers(answers)
+                .build();
+
+        QuestionDTO breakQuestion = new QuestionDTO.Builder()
+                .isBreak(true)
+                .quizTitle("Fake Quiz")
+                .type(0)
+                .questionString("")
+                .description("")
+                .topic("")
+                .answers(new HashSet<>())
+                .build();
+
+        if (counter == 0) {
+            counter++;
+            return ResponseEntity.status(HttpStatus.OK).body(multipleChoice);
+        }
+        if (counter == 1) {
+            counter++;
+            return ResponseEntity.status(HttpStatus.OK).body(trueOrFalse);
+        }
+        if (counter == 2) {
+            counter++;
+            return ResponseEntity.status(HttpStatus.OK).body(breakQuestion);
+        }
+        if (counter == 3) {
+            counter++;
+            return ResponseEntity.status(HttpStatus.OK).body(fillInTheBlank);
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("");
+    }
 
     // A really bad representation of DB data.
     @GetMapping("/{topic}")
