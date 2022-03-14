@@ -3,6 +3,7 @@ package be.ucll.quizmaster.quizmaster.service;
 import be.ucll.quizmaster.quizmaster.controller.dto.AnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
+import be.ucll.quizmaster.quizmaster.controller.dto.TopicDTO;
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
@@ -151,6 +152,33 @@ public class QuestionService {
 
         return nextQuestion;
 
+    }
+
+    public List<QuestionDTO> getQuestionsByTopic(String topic) throws NotAuthenticatedException {
+        List<QuestionDTO> listToReturn = new ArrayList<>();
+
+        Topic requestedTopic = topicService.getTopic(topic);
+
+        for (Question q: questionRepo.getQuestionsByTopic(requestedTopic)) {
+
+            Set<String> answersFromQuestion = new HashSet<>();
+            for(Answer answer: q.getAnswers()) {
+                String answerToAdd = answer.getAnswerString();
+                answersFromQuestion.add(answerToAdd);
+            }
+
+            QuestionDTO dtoToAdd = new QuestionDTO();
+
+            dtoToAdd.setQuestionString(q.getQuestionString());
+            dtoToAdd.setAnswers(answersFromQuestion);
+            dtoToAdd.setTopic(q.getTopic().getName());
+            dtoToAdd.setDescription(q.getDescription());
+            dtoToAdd.setType(q.getType());
+
+            listToReturn.add(dtoToAdd);
+        }
+
+        return listToReturn;
     }
 
 

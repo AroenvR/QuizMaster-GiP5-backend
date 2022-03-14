@@ -23,6 +23,7 @@ public class FakeQuestionController {
     int counter = 0;
     @GetMapping()
     private ResponseEntity<?> getNextQuestion(@RequestParam(value = "get-next") String answerToPrevious) {
+        logger.error(answerToPrevious);
 
         Set<String> answers = new HashSet<>();
         answers.add("4");
