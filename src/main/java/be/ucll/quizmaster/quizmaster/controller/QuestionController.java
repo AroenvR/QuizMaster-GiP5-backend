@@ -46,7 +46,7 @@ public class QuestionController {
 
 
     @GetMapping()
-    private ResponseEntity<?> getNextQuestion(@RequestBody String answerToPrevious) {
+    private ResponseEntity<?> getNextQuestion(@RequestBody(required = false) String answerToPrevious) {
         logger.debug("GET next question called.");
 
         try {
@@ -58,6 +58,7 @@ public class QuestionController {
             return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(e.getMessage());
         } catch (Exception e) {
             logger.warn(e.toString());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
