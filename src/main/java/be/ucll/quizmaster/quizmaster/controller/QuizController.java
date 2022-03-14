@@ -39,7 +39,7 @@ public class QuizController {
     }
 
     @GetMapping()
-    private ResponseEntity<?> joinQuiz(@RequestParam(value = "code") String code) {
+    private ResponseEntity<?> joinQuiz(@RequestParam(name = "code") String code) {
 
         logger.debug("JOIN quiz called.");
         try {

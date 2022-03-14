@@ -1,5 +1,6 @@
 package be.ucll.quizmaster.quizmaster.service;
 
+import be.ucll.quizmaster.quizmaster.controller.dto.AnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.*;
@@ -11,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,21 +26,19 @@ public class QuestionService {
     private final QuizQuestionService quizQuestionService;
     private final ParticipantService participantService;
     private final ResultService resultService;
-    private final AnswerService answerService;
 
     public QuestionService(QuestionRepo questionRepo,
                            TopicService topicService,
                            LoginService loginService,
                            QuizQuestionService quizQuestionService,
                            ParticipantService participantService,
-                           ResultService resultService, AnswerService answerService) {
+                           ResultService resultService) {
         this.questionRepo = questionRepo;
         this.topicService = topicService;
         this.loginService = loginService;
         this.quizQuestionService = quizQuestionService;
         this.participantService = participantService;
         this.resultService = resultService;
-        this.answerService = answerService;
     }
 
     @Transactional
@@ -86,32 +84,41 @@ public class QuestionService {
         );
 
 
+
         Quiz quizPlayed = currentParticipation.getQuiz();
 
-        if (quizPlayed.getStartTime().after(new Date())) {
-            throw new IllegalArgumentException("Quiz did not start yet.");
-        } else if (quizPlayed.getEndTime().before(new Date())) {
-            throw new IllegalArgumentException("The quiz is closed.");
-        }
+        checkQuizTime(quizPlayed);
 
+        boolean isBreak = quizQuestionService.isBreak(quizPlayed, currentParticipation);
 
-        if (!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)) {
+        if (!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)
+            && !quizQuestionService.isAfterBreak(quizPlayed, currentParticipation)) {
+
             logger.debug("member already got a question from this quiz.");
             resultService.saveAnswerGiven(answerToPrevious, quizPlayed, currentParticipation);
+
+
         } else {
-            logger.debug("this is the first question for this member in this quiz.");
+            logger.debug("this is the first question of the quiz of after the break.");
+        }
+
+        if (isBreak) {
+            QuestionDTO response = new QuestionDTO.Builder()
+                    .isBreak(true)
+                    .build();
+            logger.debug("BREAK for " + currentParticipation.getMember().getUsername() + " in quiz " + quizPlayed.getTitle());
+            return response;
         }
 
         Question q = prepareNextQuestion(quizPlayed, currentParticipation);
         logger.debug(q.toString());
-
 
         QuestionDTO response = new QuestionDTO.Builder()
                 .questionString(q.getQuestionString())
                 .description(q.getDescription())
                 .type(q.getType())
                 .topic(q.getTopic().getName())
-                .answers(q.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toSet()))
+                .answers(q.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toCollection(HashSet::new)))
                 .isBreak(false) //TODO set break in between
                 .quizTitle(quizPlayed.getTitle())
                 .build();
@@ -119,6 +126,9 @@ public class QuestionService {
         return response;
 
     }
+
+
+
 
     private Question prepareNextQuestion(Quiz quizPlayed, Participant currentParticipation) {
 
@@ -203,6 +213,14 @@ public class QuestionService {
             }
         }
 
+    }
+
+    private void checkQuizTime(Quiz quizPlayed) {
+        if (quizPlayed.getStartTime().after(new Date())) {
+            throw new IllegalArgumentException("Quiz did not start yet.");
+        } else if (quizPlayed.getEndTime().before(new Date())) {
+            throw new IllegalArgumentException("The quiz is closed.");
+        }
     }
 
     private void setAnswersInQuestion(Question toSave, List<String> answers) {

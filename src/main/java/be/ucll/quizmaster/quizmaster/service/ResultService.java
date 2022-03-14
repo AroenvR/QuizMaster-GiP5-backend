@@ -36,9 +36,6 @@ public class ResultService {
 
     }
 
-    public void updateResult(Result currentResult) {
-    }
-
     @Transactional
     public void saveAnswerGiven(String answerToPrevious, Quiz quizPlayed, Participant currentParticipation) {
 

@@ -1,6 +1,8 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
+import be.ucll.quizmaster.quizmaster.controller.dto.AnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
+import be.ucll.quizmaster.quizmaster.model.Answer;
 import be.ucll.quizmaster.quizmaster.service.QuestionService;
 import be.ucll.quizmaster.quizmaster.service.QuizService;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
@@ -62,7 +64,23 @@ public class QuestionController {
 
     }
 
+    @GetMapping("/mobile")
+    private ResponseEntity<?> getNextQuestion(@RequestBody AnswerDTO answerToPrevious){
+        logger.debug("GET next question called.");
 
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion(answerToPrevious.getAnswer()));
+        } catch (NotAuthenticatedException e) {
+            logger.debug(e.toString());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (QuizFinishedException e) {
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+    }
 
 
 }

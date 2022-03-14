@@ -61,6 +61,7 @@ public class QuizService {
 
         toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds(), host));
 
+
         Quiz saved = quizRepo.save(toSave);
         logger.debug("\nSAVED: " + saved.toString());
         return new CodeDTO(saved.getCode());
@@ -103,6 +104,7 @@ public class QuizService {
 
 
     private void checkCreateDto(CreateQuizDTO dto) throws TimeInThePastException {
+
 
         if (dto.getStartTime() == null) {
             logger.debug("no start time given");

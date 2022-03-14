@@ -1,9 +1,13 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 public class CreateQuizDTO {
@@ -12,11 +16,11 @@ public class CreateQuizDTO {
     @JsonProperty("quizTitle")
     private String quizTitle;
 
-    //@JsonProperty("startTime")
-    private Date startTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", locale = "nl_BE")
+    private LocalDateTime startTime;
 
-    //@JsonProperty("startTime")
-    private Date endTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", locale = "nl_BE")
+    private LocalDateTime endTime;
 
     private Set<Long> questionIds;
 
@@ -33,19 +37,28 @@ public class CreateQuizDTO {
         this.quizTitle = title;
     }
 
-    public Date getStartTime() {
-        return startTime;
+
+    public String getQuizTitle() {
+        return quizTitle;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setQuizTitle(String quizTitle) {
+        this.quizTitle = quizTitle;
+    }
+
+    public Date getStartTime() {
+        return Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
     public Date getEndTime() {
-        return endTime;
+        return Date.from(endTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 

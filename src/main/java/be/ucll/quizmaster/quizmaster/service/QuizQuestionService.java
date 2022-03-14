@@ -30,8 +30,6 @@ public class QuizQuestionService {
 
     public List<QuizQuestion> addQuestionsToQuizById(Quiz quiz, Set<Long> questionIds, Member host) {
 
-
-
         List<QuizQuestion> response = new ArrayList<>();
 
         for (Long questionId : questionIds) {
@@ -53,36 +51,11 @@ public class QuizQuestionService {
 
     }
 
-/*    public QuizQuestion findNextQuizQuestionWithoutEndTime(Quiz quizPlayed, Participant currentParticipation) {
-        for (QuizQuestion qq : quizPlayed.getQuizQuestions()) {
-            if (!quizQuestionHasResultForParticipation(qq, currentParticipation)){
-                return qq;
-            }
-        }
-        throw new RuntimeException("no question found without a answer given.");
-    }
-
-    public boolean quizQuestionHasResultForParticipation(QuizQuestion q, Participant currentParticipation) {
-
-        return resultRepo.existsByQuizQuestionAndAndParticipantAndIsCorrectIsNullAndEndTimeIsNull(q, currentParticipation);
-
-    }
-
-
-    public boolean isFirstQuestion(Quiz quiz, Participant participant) {
-        for (QuizQuestion q : quiz.getQuizQuestions()) {
-            if (quizQuestionHasResultForParticipation(q, participant)){
-                return false;
-            }
-        }
-        return true;
-    }*/
-
 
     public QuizQuestion findQuizQuestionToBeAnswered(Quiz quiz, Participant participant) {
 
         for (QuizQuestion qq : quiz.getQuizQuestions()) {
-            if (resultRepo.existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(qq, participant) ){
+            if (quizQuestionIsUnanswered(qq, participant) ){
                 return qq;
             }
         }
@@ -110,5 +83,47 @@ public class QuizQuestionService {
         }
         throw new QuizFinishedException("You have finished this quiz.");
 
+    }
+
+    public boolean isBreak(Quiz quiz, Participant participant) {
+
+        int numberOfQuestionSend = getNumberOfQuestionsSend(quiz, participant);
+
+        int numberOfQuestionsUnanswered = getNumberOfQuestionNotAnswered(quiz, participant);
+
+        return numberOfQuestionSend % 5 == 0 && numberOfQuestionsUnanswered == 1;
+
+    }
+
+
+    public boolean isAfterBreak(Quiz quiz, Participant participant) {
+
+        int numberOfQuestionSend = getNumberOfQuestionsSend(quiz, participant);
+
+        int numberOfQuestionsUnanswered = getNumberOfQuestionNotAnswered(quiz, participant);
+
+        return numberOfQuestionSend % 5 == 0 && numberOfQuestionsUnanswered == 0;
+
+    }
+
+
+    private int getNumberOfQuestionsSend(Quiz quiz, Participant participant) {
+        int response = 0;
+        for (QuizQuestion qq : quiz.getQuizQuestions()) {
+            if (resultRepo.existsByQuizQuestionAndParticipant(qq, participant)) response++;
+        }
+        return response;
+    }
+
+    private int getNumberOfQuestionNotAnswered(Quiz quiz, Participant participant) {
+        int response = 0;
+        for (QuizQuestion qq : quiz.getQuizQuestions()) {
+            if (resultRepo.existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(qq, participant)) response++;
+        }
+        return response;
+    }
+
+    private boolean quizQuestionIsUnanswered(QuizQuestion qq, Participant participant) {
+        return resultRepo.existsByQuizQuestionAndParticipantAndAnswerGivenIsNullAndEndTimeIsNull(qq, participant);
     }
 }
