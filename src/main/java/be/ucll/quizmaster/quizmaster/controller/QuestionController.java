@@ -28,7 +28,7 @@ public class QuestionController {
     }
 
     @PostMapping()
-    private ResponseEntity<?> createQuestion(@RequestBody CreateQuestionDTO dto){
+    private ResponseEntity<?> createQuestion(@RequestBody CreateQuestionDTO dto) {
         logger.debug("POST question called.");
 
         try {
@@ -37,8 +37,7 @@ public class QuestionController {
         } catch (NotAuthenticatedException e) {
             logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.debug(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -47,7 +46,7 @@ public class QuestionController {
 
 
     @GetMapping()
-    private ResponseEntity<?> getNextQuestion(@RequestBody String answerToPrevious){
+    private ResponseEntity<?> getNextQuestion(@RequestBody String answerToPrevious) {
         logger.debug("GET next question called.");
 
         try {
@@ -65,21 +64,9 @@ public class QuestionController {
     }
 
     @GetMapping("/mobile")
-    private ResponseEntity<?> getNextQuestion(@RequestBody AnswerDTO answerToPrevious){
-        logger.debug("GET next question called.");
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion(answerToPrevious.getAnswer()));
-        } catch (NotAuthenticatedException e) {
-            logger.debug(e.toString());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (QuizFinishedException e) {
-            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(e.getMessage());
-        } catch (Exception e) {
-            logger.warn(e.toString());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-
+    private ResponseEntity<?> getNextQuestion(@RequestBody AnswerDTO answerToPrevious) {
+        logger.debug("GET next mobile question called.");
+        return getNextQuestion(answerToPrevious.getAnswer());
     }
 
 

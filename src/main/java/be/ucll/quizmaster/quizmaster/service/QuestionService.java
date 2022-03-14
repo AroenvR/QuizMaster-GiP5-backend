@@ -67,7 +67,7 @@ public class QuestionService {
                 .type(dto.getType())
                 .build();
 
-        setAnswersInQuestion(toSave, dto.getAnswers());
+        setAnswersInRecievedQuestion(toSave, dto.getAnswers());
 
         Question saved = questionRepo.save(toSave);
         logger.info("SAVED: " + saved.toString());
@@ -84,7 +84,6 @@ public class QuestionService {
         );
 
 
-
         Quiz quizPlayed = currentParticipation.getQuiz();
 
         checkQuizTime(quizPlayed);
@@ -92,7 +91,7 @@ public class QuestionService {
         boolean isBreak = quizQuestionService.isBreak(quizPlayed, currentParticipation);
 
         if (!quizQuestionService.isFirstQuestionFromQuiz(quizPlayed, currentParticipation)
-            && !quizQuestionService.isAfterBreak(quizPlayed, currentParticipation)) {
+                && !quizQuestionService.isAfterBreak(quizPlayed, currentParticipation)) {
 
             logger.debug("member already got a question from this quiz.");
             resultService.saveAnswerGiven(answerToPrevious, quizPlayed, currentParticipation);
@@ -118,16 +117,14 @@ public class QuestionService {
                 .description(q.getDescription())
                 .type(q.getType())
                 .topic(q.getTopic().getName())
-                .answers(q.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toCollection(HashSet::new)))
-                .isBreak(false) //TODO set break in between
+                .answers(getAnswersForPreparedQuestion(q))
+                .isBreak(false)
                 .quizTitle(quizPlayed.getTitle())
                 .build();
         logger.info("NEXT Question -> " + q.toString());
         return response;
 
     }
-
-
 
 
     private Question prepareNextQuestion(Quiz quizPlayed, Participant currentParticipation) {
@@ -223,7 +220,7 @@ public class QuestionService {
         }
     }
 
-    private void setAnswersInQuestion(Question toSave, List<String> answers) {
+    private void setAnswersInRecievedQuestion(Question toSave, List<String> answers) {
         switch (toSave.getType()) {
             case 1: //multiple choice
                 toSave.addAnswer(new Answer(answers.get(0), true, toSave));
@@ -231,7 +228,7 @@ public class QuestionService {
                     toSave.addAnswer(new Answer(answers.get(i), false, toSave));
                 }
                 break;
-            case 2:
+            case 2: //true false
                 if (answers.get(0).equalsIgnoreCase("true")) {
                     //true is het juiste antwoord
                     toSave.addAnswer(new Answer(answers.get(0), true, toSave));
@@ -250,6 +247,15 @@ public class QuestionService {
                 }
                 break;
         }
+
+    }
+
+    private Set<String> getAnswersForPreparedQuestion(Question q) {
+
+        if (q.getType() == 3) {
+            return new HashSet<>();
+        }
+        return q.getAnswers().stream().map(Answer::getAnswerString).collect(Collectors.toCollection(HashSet::new));
 
     }
 
