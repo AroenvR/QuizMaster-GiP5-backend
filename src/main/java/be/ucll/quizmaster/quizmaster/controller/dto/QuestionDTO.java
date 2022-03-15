@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class QuestionDTO {
 
-    private long quizId;
+    private long questionId;
 
     private String quizTitle;
 
@@ -28,7 +28,7 @@ public class QuestionDTO {
     }
 
     private QuestionDTO(Builder builder) {
-        setQuizId(builder.quizId);
+        setQuestionId(builder.questionId);
         setQuizTitle(builder.quizTitle);
         setQuestionString(builder.questionString);
         setType(builder.type);
@@ -38,12 +38,12 @@ public class QuestionDTO {
         setDescription(builder.description);
     }
 
-    public long getQuizId() {
-        return quizId;
+    public long getQuestionId() {
+        return questionId;
     }
 
-    public void setQuizId(long quizId) {
-        this.quizId = quizId;
+    public void setQuestionId(long questionId) {
+        this.questionId = questionId;
     }
 
     public String getQuizTitle() {
@@ -103,7 +103,7 @@ public class QuestionDTO {
     }
 
     public static final class Builder {
-        private long quizId;
+        private long questionId;
         private String quizTitle;
         private String questionString;
         private int type;
@@ -115,8 +115,8 @@ public class QuestionDTO {
         public Builder() {
         }
 
-        public Builder quizId(long val) {
-            quizId = val;
+        public Builder questionId(long val) {
+            questionId = val;
             return this;
         }
 
