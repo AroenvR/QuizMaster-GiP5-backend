@@ -35,8 +35,6 @@ public class QuestionDTO {
         setDescription(builder.description);
     }
 
-
-
     public String getQuizTitle() {
         return quizTitle;
     }

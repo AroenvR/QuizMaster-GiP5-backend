@@ -43,13 +43,22 @@ public class QuizController {
 
         logger.debug("JOIN quiz called.");
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
+            ResponseEntity<QuizDTO> response = ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
+            logger.debug(response.toString());
+            return response;
+
+
+
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            logger.debug(response.toString());
+            return response;
         } catch (Exception e) {
             logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            ResponseEntity<String> body = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.debug(body.toString());
+            return body;
         }
 
     }

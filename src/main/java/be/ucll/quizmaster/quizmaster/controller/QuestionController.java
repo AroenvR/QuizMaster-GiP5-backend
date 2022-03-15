@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.controller.dto.AnswerDTO;
+import be.ucll.quizmaster.quizmaster.controller.dto.ChooseQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.Answer;
 import be.ucll.quizmaster.quizmaster.service.QuestionService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.Set;
 
 @RestController
 @RequestMapping("questions")
@@ -44,7 +46,6 @@ public class QuestionController {
 
     }
 
-
     @GetMapping()
     private ResponseEntity<?> getNextQuestion(@RequestParam(name = "get-next") String answerToPrevious) {
         logger.debug("GET next question called. with -> " + answerToPrevious);
@@ -68,6 +69,23 @@ public class QuestionController {
     private ResponseEntity<?> getNextQuestion(@RequestBody AnswerDTO answerToPrevious) {
         logger.debug("GET next mobile question called.");
         return getNextQuestion(answerToPrevious.getAnswer());
+    }
+
+    @GetMapping("/{topic}")
+    public ResponseEntity<?> getAllForTopic(@PathVariable String topic) {
+        logger.error("Requested topic: " + topic);
+
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(questionService.getQuestionsByTopic(topic));
+
+        } catch (NotAuthenticatedException e) {
+            logger.debug(e.toString());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        catch (Exception e) {
+            logger.debug(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 
