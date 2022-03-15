@@ -1,41 +1,53 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
-import be.ucll.quizmaster.quizmaster.controller.dto.CreateAnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
-import be.ucll.quizmaster.quizmaster.service.QuestionService;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class QuestionControllerTest extends AbstractIntegrationTesting {
-
-    private final Logger logger = LoggerFactory.getLogger(QuestionControllerTest.class);
+    @Autowired
+    private QuestionController QuestionController;
 
     @Autowired
-    QuestionService service;
+    private WebApplicationContext context;
+
+    private MockMvc mockMvc;
+
+    String memberEmail = "test@test.test";
+    String memberName = "test";
+    String memberPass = "test";
+
+    @BeforeEach
+    void setUp() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
+
+        MvcResult mvcPost = this.mockMvc.perform(MockMvcRequestBuilders.post("/members")
+                        .content("{\"email\":\"" + memberEmail + "\"," +
+                                "\"username\":\"" + memberName + "\"," +
+                                "\"password\":\"" + memberPass + "\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
 
     @Test
     void createQuestion() throws Exception {
-        CreateAnswerDTO answer = new CreateAnswerDTO.Builder()
-                .answerString("true")
-                .correct(true)
-                .build();
 
-        Set<CreateAnswerDTO> answers = new HashSet();
-        answers.add(answer);
-
+        List<String> answers = new ArrayList<>();
         CreateQuestionDTO question = new CreateQuestionDTO.Builder()
                 .questionString("Is dit vraag 1?")
                 .description("True or False.")
@@ -45,44 +57,9 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 .build();
 
         MvcResult mvcPost = this.mockMvc.perform(MockMvcRequestBuilders.post("/questions")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(question)))
-//                .andDo(print())
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        CreateQuestionDTO savedQuestion = fromMvcResult(mvcPost, CreateQuestionDTO.class);
-
-        Assertions.assertEquals(1, savedQuestion.getQuestionId());
-        Assertions.assertEquals("Is dit vraag 1?", savedQuestion.getQuestionString());
-        Assertions.assertEquals("True or False.", savedQuestion.getDescription());
-        Assertions.assertEquals("Quizzes", savedQuestion.getTopic());
-        Assertions.assertEquals(1, savedQuestion.getType());
-    }
-
-    @Test
-    void testDuplicateAnswers() throws Exception {
-        CreateAnswerDTO no = new CreateAnswerDTO.Builder()
-                .answerString("Nee")
-                .correct(true)
-                .build();
-
-        Set<CreateAnswerDTO> answers = new HashSet();
-        answers.add(no);
-
-        CreateQuestionDTO question = new CreateQuestionDTO.Builder()
-                .questionString("Is dit vraag 1?")
-                .description("Multiple Choice.")
-                .topic("Quizzes")
-                .type(1)
-                .answersDTOs(answers)
-                .build();
-
-        MvcResult mvcPost = this.mockMvc.perform(MockMvcRequestBuilders.post("/questions")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(question)))
+                        .with(httpBasic(memberEmail, memberPass))
+                        .content(toJson(question))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
     }

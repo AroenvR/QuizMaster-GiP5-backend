@@ -1,6 +1,8 @@
 package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,6 +14,9 @@ public class Participant {
     @Column(name = "participation_id")
     private long participantionId;
 
+    @Column(name = "finished")
+    private boolean finished;
+
     @OneToOne
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
@@ -20,8 +25,8 @@ public class Participant {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "participant")
-    private Set<Result> results;
+    @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY)
+    private List<Result> results = new ArrayList<>();
 
     public Participant() {
     }
@@ -30,12 +35,14 @@ public class Participant {
     public Participant(Member member, Quiz quiz) {
         this.member = member;
         this.quiz = quiz;
+        this.finished = false;
     }
 
     private Participant(Builder builder) {
         setParticipantionId(builder.participantionId);
         setMember(builder.member);
         setQuiz(builder.quiz);
+        setFinished(builder.finished);
         results = builder.results;
     }
 
@@ -63,12 +70,24 @@ public class Participant {
         this.quiz = quiz;
     }
 
-    public Set<Result> getResults() {
+    public List<Result> getResults() {
         return results;
     }
 
     public void addResult(Result result) {
         this.results.add(result);
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public void setResults(List<Result> results) {
+        this.results = results;
     }
 
     @Override
@@ -88,9 +107,10 @@ public class Participant {
     public String toString() {
         return "Participant{" +
                 "participantionId=" + participantionId +
-                ", member=" + member +
-                ", quiz=" + quiz +
-                ", results=" + results +
+                ", finished=" + finished +
+                ", member=" + member.getEmailAddress() +
+                ", quiz=" + quiz.getCode() +
+                ", results size =" + results +
                 '}';
     }
 
@@ -98,7 +118,8 @@ public class Participant {
         private long participantionId;
         private Member member;
         private Quiz quiz;
-        private Set<Result> results;
+        private List<Result> results;
+        private boolean finished;
 
         public Builder() {
         }
@@ -118,8 +139,13 @@ public class Participant {
             return this;
         }
 
-        public Builder results(Set<Result> val) {
+        public Builder results(List<Result> val) {
             results = val;
+            return this;
+        }
+
+        public Builder finished(boolean val) {
+            finished = val;
             return this;
         }
 

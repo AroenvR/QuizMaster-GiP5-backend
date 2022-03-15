@@ -23,21 +23,21 @@ public class MemberPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        logger.warn("getting authorities for " + member.getEmailAddress());
+        logger.debug("getting authorities for " + member.getEmailAddress());
         return new HashSet<>();
     }
 
     @Override
     public String getPassword() {
-        logger.warn("getting password for " + member.getEmailAddress());
+        logger.debug("getting password for " + member.getEmailAddress());
         String encode = passwordEncoder.encode(member.getPassword());
-        logger.warn("encoded password = " + encode);
+        logger.debug("encoded password = " + encode);
         return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        logger.warn("getting password for " + member.getEmailAddress());
+        logger.debug("getting password for " + member.getEmailAddress());
         return member.getUsername();
     }
 

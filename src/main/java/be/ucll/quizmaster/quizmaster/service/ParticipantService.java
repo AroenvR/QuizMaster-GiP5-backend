@@ -1,11 +1,15 @@
 package be.ucll.quizmaster.quizmaster.service;
 
 import be.ucll.quizmaster.quizmaster.model.Member;
+import be.ucll.quizmaster.quizmaster.model.Participant;
 import be.ucll.quizmaster.quizmaster.model.Quiz;
 import be.ucll.quizmaster.quizmaster.repo.ParticipantRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class ParticipantService {
@@ -18,8 +22,34 @@ public class ParticipantService {
         this.participantRepo = participantRepo;
     }
 
-    public boolean isAlreadyInQuiz(Member candidateToJoin, Quiz quizToJoin) {
+    public boolean isAlreadyInThisQuiz(Member candidateToJoin, Quiz quizToJoin) {
         return participantRepo.existsByQuizAndMember(quizToJoin, candidateToJoin);
     }
+
+    public Participant saveParticipation(Participant participation) {
+
+        return participantRepo.save(participation);
+
+    }
+
+    public boolean isAlreadyInQuizAndNotFinished(Member candidateToJoin) {
+        return participantRepo.existsByMemberAndFinishedIsFalse(candidateToJoin);
+    }
+
+    @Transactional
+    public void setCurrentQuizFinished(Member candidateToJoin) {
+        Participant currentParticipation = getCurrentParticipation(candidateToJoin).orElseThrow(
+                () -> new IllegalArgumentException("participation not found")
+        );
+        currentParticipation.setFinished(true);
+        participantRepo.save(currentParticipation);
+        logger.debug(candidateToJoin.getEmailAddress() + " his/her quiz is set to finished");
+    }
+
+    public Optional<Participant> getCurrentParticipation(Member member) {
+        return participantRepo.getParticipantByMemberAndFinishedIsFalse(member);
+    }
+
+
 
 }

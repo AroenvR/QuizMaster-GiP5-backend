@@ -1,27 +1,21 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.util.List;
 import java.util.Set;
 
 public class CreateQuestionDTO {
 
-    @JsonProperty(required = false)
     private long questionId;
 
-    @JsonProperty(defaultValue = "TEST")
     private String questionString;
 
-    @JsonProperty(defaultValue = "1")
     private int type;
 
-    @JsonProperty(defaultValue = "TEST")
     private String description;
 
-    @JsonProperty(defaultValue = "TEST")
     private String topic;
 
-    private Set<CreateAnswerDTO> answersDTOs;
+    private List<String> answers;
 
     public CreateQuestionDTO() {
     }
@@ -31,7 +25,7 @@ public class CreateQuestionDTO {
         this.type = dto.type;
         this.description = dto.description;
         this.questionString = dto.questionString;
-        this.answersDTOs = dto.answersDTOs;
+        this.answers = dto.answers;
         this.topic = dto.topic;
     }
 
@@ -42,16 +36,9 @@ public class CreateQuestionDTO {
         setType(builder.type);
         setDescription(builder.description);
         setTopic(builder.topic);
-        setAnswersDTOs(builder.answersDTOs);
+        setAnswersDTOs(builder.answers);
     }
 
-    public long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(long questionId) {
-        this.questionId = questionId;
-    }
 
     public String getQuestionString() {
         return questionString;
@@ -85,12 +72,12 @@ public class CreateQuestionDTO {
         this.topic = topic;
     }
 
-    public Set<CreateAnswerDTO> getAnswersDTOs() {
-        return answersDTOs;
+    public List<String> getAnswers() {
+        return answers;
     }
 
-    public void setAnswersDTOs(Set<CreateAnswerDTO> answersDTOs) {
-        this.answersDTOs = answersDTOs;
+    public void setAnswersDTOs(List<String> answersDTOs) {
+        this.answers = answersDTOs;
     }
 
 
@@ -101,7 +88,7 @@ public class CreateQuestionDTO {
                 ", type=" + type +
                 ", description='" + description + '\'' +
                 ", topic='" + topic + '\'' +
-                ", answersDTOs=" + answersDTOs +
+                ", answers=" + answers +
                 '}';
     }
 
@@ -112,7 +99,7 @@ public class CreateQuestionDTO {
         private int type;
         private String description;
         private String topic;
-        private Set<CreateAnswerDTO> answersDTOs;
+        private List<String > answers;
 
         public Builder() {
         }
@@ -142,13 +129,14 @@ public class CreateQuestionDTO {
             return this;
         }
 
-        public Builder answersDTOs(Set<CreateAnswerDTO> val) {
-            answersDTOs = val;
+        public Builder answersDTOs(List<String> val) {
+            answers = val;
             return this;
         }
 
         public CreateQuestionDTO build() {
             return new CreateQuestionDTO(this);
         }
+
     }
 }

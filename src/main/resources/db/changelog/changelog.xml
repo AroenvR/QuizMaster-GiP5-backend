@@ -15,5 +15,7 @@
     <include file="db/changelog/migrations/8-create-table-quiz-question.xml"/>
     <include file="db/changelog/migrations/9-create-table-result.xml"/>
     <include file="db/changelog/migrations/10-relatie-member-question.xml"/>
+    <include file="db/changelog/migrations/11-alter-participant-finished.xml"/>
+    <include file="db/changelog/migrations/12-alter-result-nullables.xml"/>
 
 </databaseChangeLog>

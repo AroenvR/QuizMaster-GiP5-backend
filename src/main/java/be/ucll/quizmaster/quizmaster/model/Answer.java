@@ -64,6 +64,7 @@ public class Answer {
         this.answerString = answerString;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

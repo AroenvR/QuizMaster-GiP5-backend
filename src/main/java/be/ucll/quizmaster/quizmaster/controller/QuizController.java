@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class QuizController {
 
 
-
     private final QuizService quizService;
 
     private final Logger logger = LoggerFactory.getLogger(QuizController.class);
@@ -25,37 +24,43 @@ public class QuizController {
     }
 
     @PostMapping()
-    private ResponseEntity<?> createQuiz(@RequestBody CreateQuizDTO dto){
+    private ResponseEntity<?> createQuiz(@RequestBody CreateQuizDTO dto) {
         logger.debug("POST quiz called.");
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(quizService.saveQuiz(dto));
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
-        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (Exception e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }
 
-/*    @PostMapping()
-    private ResponseEntity<?> joinQuiz(@RequestParam String quizCode){
+    @GetMapping()
+    private ResponseEntity<?> joinQuiz(@RequestParam(name = "code") String code) {
 
         logger.debug("JOIN quiz called.");
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(quizCode));
+            ResponseEntity<QuizDTO> response = ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
+            logger.debug(response.toString());
+            return response;
+
+
+
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
-        catch (Exception e) {
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            logger.debug(response.toString());
+            return response;
+        } catch (Exception e) {
             logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            ResponseEntity<String> body = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.debug(body.toString());
+            return body;
         }
 
-    }*/
-
+    }
 
 }

@@ -1,7 +1,6 @@
 package be.ucll.quizmaster.quizmaster.service;
 
 
-import be.ucll.quizmaster.quizmaster.config.security.MemberPrincipal;
 import be.ucll.quizmaster.quizmaster.controller.dto.CodeDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuizDTO;
@@ -13,9 +12,6 @@ import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedExceptio
 import be.ucll.quizmaster.quizmaster.service.exceptions.TimeInThePastException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,28 +25,28 @@ public class QuizService {
 
     private final QuizRepo quizRepo;
 
-    private final QuestionService questionService;
+    private final LoginService loginService;
     private final QuizQuestionService quizQuestionService;
     private final MemberService memberService;
     private final ParticipantService participantService;
 
+
     public QuizService(QuizRepo quizRepo,
-                       QuestionService questionService,
+                       LoginService loginService,
                        QuizQuestionService quizQuestionService,
                        MemberService memberService,
                        ParticipantService participantService) {
         this.quizRepo = quizRepo;
-        this.questionService = questionService;
+        this.loginService = loginService;
         this.quizQuestionService = quizQuestionService;
         this.memberService = memberService;
         this.participantService = participantService;
     }
 
-
     @Transactional
     public CodeDTO saveQuiz(CreateQuizDTO dto) throws NotAuthenticatedException, TimeInThePastException {
 
-        Member host = getLoggedInMemeber("host a quiz");
+        Member host = loginService.getLoggedInMember("Not authenticated. only members can host a quiz");
         logger.debug("\nquiz host is " + host.toString());
 
         checkCreateDto(dto);
@@ -63,7 +59,8 @@ public class QuizService {
                 .endTime(dto.getEndTime())
                 .build();
 
-        toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds()));
+        toSave.setQuizQuestions(quizQuestionService.addQuestionsToQuizById(toSave, dto.getQuestionIds(), host));
+
 
         Quiz saved = quizRepo.save(toSave);
         logger.debug("\nSAVED: " + saved.toString());
@@ -75,7 +72,7 @@ public class QuizService {
     @Transactional
     public QuizDTO joinQuiz(String quizCode) throws NotAuthenticatedException {
 
-        Member candidateToJoin = getLoggedInMemeber("join a quiz.");
+        Member candidateToJoin = loginService.getLoggedInMember("Not authenticated. only members can join a quiz.");
 
         if (!quizRepo.existsByCode(quizCode)){
             throw new IllegalArgumentException("no quiz with code '" + quizCode + "'");
@@ -83,15 +80,31 @@ public class QuizService {
 
         Quiz quizToJoin = quizRepo.getByCode(quizCode);
 
-        if (participantService.isAlreadyInQuiz(candidateToJoin, quizToJoin)) {
-            //throw new Illegal
+        if (candidateToJoin.equals(quizToJoin.getHost())){
+            throw new IllegalArgumentException("nice try ;) the host can not join his own quiz");
         }
-        return null;
+
+        if (participantService.isAlreadyInQuizAndNotFinished(candidateToJoin)) {
+            if (participantService.isAlreadyInThisQuiz(candidateToJoin, quizToJoin)) {
+                throw new IllegalArgumentException("You can only participate once in a quiz");
+            } else {
+                participantService.setCurrentQuizFinished(candidateToJoin);
+            }
+        }
+
+        Participant participation = new Participant(candidateToJoin, quizToJoin);
+        Participant saved = participantService.saveParticipation(participation);
+        logger.debug("SAVED: " + saved);
+
+        QuizDTO response = new QuizDTO(saved.getQuiz().getTitle(), saved.getQuiz().getHost().getUsername());
+        logger.debug("Response:" + response);
+        return response;
 
     }
 
 
     private void checkCreateDto(CreateQuizDTO dto) throws TimeInThePastException {
+
 
         if (dto.getStartTime() == null) {
             logger.debug("no start time given");
@@ -132,16 +145,5 @@ public class QuizService {
         return code;
     }
 
-    private Member getLoggedInMemeber(String actionRequested) throws NotAuthenticatedException {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
-            throw new NotAuthenticatedException("Not authenticated. only members can " + authentication);
-        }
-
-        MemberPrincipal memberPrincipal = (MemberPrincipal)authentication.getPrincipal();
-        return memberPrincipal.getMember();
-
-    }
 
 }

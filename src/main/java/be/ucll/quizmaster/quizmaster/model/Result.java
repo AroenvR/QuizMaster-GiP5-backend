@@ -25,7 +25,7 @@ public class Result {
     private String answerGiven;
 
     @Column(name = "correct")
-    private String isCorrect;
+    private boolean isCorrect;
 
     @Column(name = "start_time")
     private Date startTime;
@@ -37,18 +37,28 @@ public class Result {
     public Result() {
     }
 
-    public Result(QuizQuestion quizQuestion, Participant participant, String answerGiven, String isCorrect) {
+    public Result(QuizQuestion quizQuestion, Participant participant, String answerGiven, boolean isCorrect) {
         this.quizQuestion = quizQuestion;
         this.participant = participant;
         this.answerGiven = answerGiven;
         this.isCorrect = isCorrect;
     }
 
+    private Result(Builder builder) {
+        setQuizQuestion(builder.quizQuestion);
+        setParticipant(builder.participant);
+        setAnswerGiven(builder.answerGiven);
+        setIsCorrect(builder.isCorrect);
+        setStartTime(builder.startTime);
+        setEndTime(builder.endTime);
+    }
+
+
     public long getResultId() {
         return resultId;
     }
 
-    private void setResultId(long resultId) {
+    public void setResultId(long resultId) {
         this.resultId = resultId;
     }
 
@@ -72,15 +82,15 @@ public class Result {
         return answerGiven;
     }
 
-    private void setAnswerGiven(String answerGiven) {
+    public void setAnswerGiven(String answerGiven) {
         this.answerGiven = answerGiven;
     }
 
-    public String getIsCorrect() {
+    public boolean getIsCorrect() {
         return isCorrect;
     }
 
-    private void setIsCorrect(String isCorrect) {
+    public void setIsCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
 
@@ -88,7 +98,7 @@ public class Result {
         return startTime;
     }
 
-    private void setStartTime(Date startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -96,8 +106,16 @@ public class Result {
         return endTime;
     }
 
-    private void setEndTime(Date endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
     }
 
     @Override
@@ -111,7 +129,7 @@ public class Result {
         if (!getQuizQuestion().equals(result.getQuizQuestion())) return false;
         if (!getParticipant().equals(result.getParticipant())) return false;
         if (!getAnswerGiven().equals(result.getAnswerGiven())) return false;
-        if (!getIsCorrect().equals(result.getIsCorrect())) return false;
+        if (!getIsCorrect() == result.getIsCorrect()) return false;
         if (!getStartTime().equals(result.getStartTime())) return false;
         return getEndTime().equals(result.getEndTime());
     }
@@ -121,11 +139,57 @@ public class Result {
         return "Result{" +
                 "resultId=" + resultId +
                 ", quizQuestion=" + quizQuestion +
-                ", participant=" + participant +
+                ", participant=" + participant.getParticipantionId() +
                 ", answerGiven='" + answerGiven + '\'' +
-                ", isCorrect='" + isCorrect + '\'' +
+                ", isCorrect=" + isCorrect +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';
+    }
+
+    public static final class Builder {
+        private QuizQuestion quizQuestion;
+        private Participant participant;
+        private String answerGiven;
+        private boolean isCorrect;
+        private Date startTime;
+        private Date endTime;
+
+        public Builder() {
+        }
+
+        public Builder quizQuestion(QuizQuestion val) {
+            quizQuestion = val;
+            return this;
+        }
+
+        public Builder participant(Participant val) {
+            participant = val;
+            return this;
+        }
+
+        public Builder answerGiven(String val) {
+            answerGiven = val;
+            return this;
+        }
+
+        public Builder isCorrect(boolean val) {
+            isCorrect = val;
+            return this;
+        }
+
+        public Builder startTime(Date val) {
+            startTime = val;
+            return this;
+        }
+
+        public Builder endTime(Date val) {
+            endTime = val;
+            return this;
+        }
+
+        public Result build() {
+            return new Result(this);
+        }
     }
 }
