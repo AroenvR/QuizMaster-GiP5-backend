@@ -2,12 +2,20 @@ package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
 import be.ucll.quizmaster.quizmaster.controller.dto.MemberDTO;
-import liquibase.pro.packaged.M;
+import be.ucll.quizmaster.quizmaster.model.Member;
+import be.ucll.quizmaster.quizmaster.repo.MemberRepo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -15,35 +23,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class MemberControllerTest extends AbstractIntegrationTesting {
 
-    @Test
-    void getMemberById() {
-        //todo: find a way to compare Id's since we never return an Id
-    }
+    @Autowired
+    MemberRepo memberRepo;
 
     @Test
     void createMember() throws Exception {
         MemberDTO newMember = new MemberDTO.Builder()
-                .email("test@test.test")
-                .username("testtest")
-                .password("test")
+                .email("newTest@test.test")
+                .username("newTest")
+                .password("newTest")
                 .build();
 
-        MvcResult mvcPost = this.mockMvc.perform(MockMvcRequestBuilders.post("/members")
+        MvcResult mvcPost = mockMvc.perform(MockMvcRequestBuilders.post("/members")
                         .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
                         .content(toJson(newMember))
                         .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        MemberDTO savedMember = fromMvcResult(mvcPost, MemberDTO.class);
+        Member dbMember = memberRepo.getByEmailAddress(newMember.getEmail()).get();
 
-        assertEquals(savedMember.getEmail(), newMember.getEmail());
-        assertEquals(savedMember.getUsername(), newMember.getUsername());
-        assertEquals(savedMember.getPassword(), newMember.getPassword());
-
-        /*TODO
-        NEED to get asertion on "getMemberByMail()" or "getMemberByUsername()" to check if the member actually exists in the db or not.
-         */
+        assertEquals(newMember.getEmail(), dbMember.getEmailAddress());
+        assertEquals(newMember.getUsername(), dbMember.getUsername());
+        assertNotNull(dbMember.getPassword());
+        assertNotEquals(newMember.getPassword(), dbMember.getPassword());
+        //assertEquals(encoder.encode(newMember.getPassword()), dbMember.getPassword());
     }
+
+    @Test
+    void getMemberById() {
+        //todo method still returns null
+    }
+
+
 }

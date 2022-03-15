@@ -28,6 +28,13 @@ public class CreateQuizDTO {
     public CreateQuizDTO() {
     }
 
+    private CreateQuizDTO(Builder builder) {
+        setQuizTitle(builder.quizTitle);
+        setStartTime(builder.startTime);
+        setEndTime(builder.endTime);
+        setQuestionIds(builder.questionIds);
+    }
+
 
     public String getTitle() {
         return quizTitle;
@@ -79,5 +86,39 @@ public class CreateQuizDTO {
                 ", endTime=" + endTime +
                 ", questionIds=" + questionIds +
                 '}';
+    }
+
+    public static final class Builder {
+        private String quizTitle;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+        private Set<Long> questionIds;
+
+        public Builder() {
+        }
+
+        public Builder quizTitle(String val) {
+            quizTitle = val;
+            return this;
+        }
+
+        public Builder startTime(LocalDateTime val) {
+            startTime = val;
+            return this;
+        }
+
+        public Builder endTime(LocalDateTime val) {
+            endTime = val;
+            return this;
+        }
+
+        public Builder questionIds(Set<Long> val) {
+            questionIds = val;
+            return this;
+        }
+
+        public CreateQuizDTO build() {
+            return new CreateQuizDTO(this);
+        }
     }
 }

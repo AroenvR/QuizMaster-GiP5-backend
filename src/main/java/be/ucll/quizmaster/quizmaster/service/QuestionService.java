@@ -152,7 +152,6 @@ public class QuestionService {
         logger.debug("next question = " + nextQuestion.toString());
 
         return nextQuestion;
-
     }
 
     public List<QuestionDTO> getQuestionsByTopic(String topic) throws NotAuthenticatedException {

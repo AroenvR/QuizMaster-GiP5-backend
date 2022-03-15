@@ -46,9 +46,6 @@ public class QuizController {
             ResponseEntity<QuizDTO> response = ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
             logger.debug(response.toString());
             return response;
-
-
-
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

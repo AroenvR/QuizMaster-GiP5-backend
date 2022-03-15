@@ -65,8 +65,6 @@ public abstract class AbstractIntegrationTesting {
 
     @BeforeEach
     private void setup() throws Exception {
-
-
         MemberDTO woutDTO = new MemberDTO("wout@bosteels.eu", "woutb", "TESTTEST");
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webAppCont).apply(springSecurity()).build();
