@@ -47,8 +47,8 @@ public class QuestionController {
     }
 
     @GetMapping()
-    private ResponseEntity<?> getNextQuestion(@RequestBody(required = false) String answerToPrevious) {
-        logger.debug("GET next question called.");
+    private ResponseEntity<?> getNextQuestion(@RequestParam(name = "get-next") String answerToPrevious) {
+        logger.debug("GET next question called. with -> " + answerToPrevious);
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getNextQuestion(answerToPrevious));

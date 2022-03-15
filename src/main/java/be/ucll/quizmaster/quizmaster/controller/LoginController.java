@@ -32,18 +32,6 @@ public class LoginController {
         }
     }
 
-/*
-    //@PreAuthorize("")
-    @GetMapping("logout")
-    public ResponseEntity<?> logout(){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        authentication.setAuthenticated(false);
-        return ResponseEntity.status(HttpStatus.OK).build();
-
-
-    }*/
 
 
 }
