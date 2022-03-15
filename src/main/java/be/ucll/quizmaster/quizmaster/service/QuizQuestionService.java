@@ -38,10 +38,6 @@ public class QuizQuestionService {
                     () ->  new EntityNotFoundException("no question found with id: " + questionId)
             );
 
-            if (!question.getMember().equals(host)){
-                throw new IllegalArgumentException("You don't have access to question '" + question.getQuestionString() + "', you can only add questions you created.");
-            }
-
             response.add(new QuizQuestion(question, quiz));
             logger.info(question.getQuestionString() + " add to " + quiz.getTitle());
 
