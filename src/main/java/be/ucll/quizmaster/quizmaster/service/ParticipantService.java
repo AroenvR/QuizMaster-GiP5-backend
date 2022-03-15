@@ -51,5 +51,13 @@ public class ParticipantService {
     }
 
 
+    public Participant getParticipation(Quiz quiz, Member member) {
 
+        return participantRepo.getParticipantByMemberAndQuiz(quiz, member).orElseThrow(
+                () -> new IllegalArgumentException(
+                        "no participation for member " + member.getUsername() + " in quiz " + quiz.getTitle()
+                )
+        );
+
+    }
 }

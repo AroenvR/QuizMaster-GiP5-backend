@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +23,9 @@ public class ResultController {
         this.resultService = resultService;
     }
 
-
+    @GetMapping("/host")
     private ResponseEntity<?> getAllResultsForQuiz(@RequestParam(name = "code") String code){
-        logger.debug("GET All Results For Quiz Called.");
+        logger.debug("GET All Results For Quiz Called. -> " + code);
         try {
             return ResponseEntity.status(HttpStatus.OK).body(resultService.getAllResultsForQuiz(code));
         } catch (NotAuthenticatedException e) {
@@ -37,9 +38,9 @@ public class ResultController {
 
     }
 
-
+    @GetMapping
     private ResponseEntity<?> getResult(@RequestParam(name = "code") String code){
-        logger.debug("GET Result For Quiz Called.");
+        logger.debug("GET Result For Quiz Called ->." + code);
         try {
             return ResponseEntity.status(HttpStatus.OK).body(resultService.getResultForQuiz(code));
         } catch (NotAuthenticatedException e) {

@@ -16,10 +16,10 @@ public class CreateQuizDTO {
     @JsonProperty("quizTitle")
     private String quizTitle;
 
-    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", locale = "nl_BE")
+    //@JsonFormat(pattern="yyyy-MM-ddTHH:mm:ss", locale = "nl_BE")
     private LocalDateTime startTime;
 
-    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", locale = "nl_BE")
+    //@JsonFormat(pattern="yyyy-MM-ddTHH:mm:ss", locale = "nl_BE")
     private LocalDateTime endTime;
 
     private Set<Long> questionIds;

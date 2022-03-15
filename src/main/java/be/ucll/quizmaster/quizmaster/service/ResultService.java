@@ -17,10 +17,16 @@ public class ResultService {
 
     private final ResultRepo resultRepo;
     private final QuizQuestionService quizQuestionService;
+    private final LoginService loginService;
+    private final ParticipantService participantService;
+    private final QuizService quizService;
 
-    public ResultService(ResultRepo resultRepo, QuizQuestionService quizQuestionService) {
+    public ResultService(ResultRepo resultRepo, QuizQuestionService quizQuestionService, LoginService loginService, ParticipantService participantService, QuizService quizService) {
         this.resultRepo = resultRepo;
         this.quizQuestionService = quizQuestionService;
+        this.loginService = loginService;
+        this.participantService = participantService;
+        this.quizService = quizService;
     }
 
     public Result saveResult(Result result) {
@@ -72,7 +78,26 @@ public class ResultService {
     }
 
     public FeedbackDTO getResultForQuiz(String code) throws NotAuthenticatedException {
-        return null; //TODO
 
+
+        Member loggedInMember = loginService.getLoggedInMember("only members can get there result");
+
+        if (code == null || code.strip().equals("")) {
+            throw new IllegalArgumentException("no quiz code given.");
+        }
+
+        Quiz quizPlayed = quizService.getQuizByCode(code);
+
+        if (!participantService.isAlreadyInThisQuiz(loggedInMember, quizPlayed)){
+            throw new IllegalArgumentException("you did not participate in this quiz.");
+        }
+
+        if (participantService.getParticipation(quizPlayed, loggedInMember).isFinished()){
+            throw new IllegalArgumentException("you need to finish a quiz before you can get your result.");
+        }
+
+
+
+        return null;
     }
 }
