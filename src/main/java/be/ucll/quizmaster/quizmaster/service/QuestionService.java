@@ -169,6 +169,7 @@ public class QuestionService {
 
             QuestionDTO dtoToAdd = new QuestionDTO();
 
+            dtoToAdd.setQuizId(q.getQuestionId());
             dtoToAdd.setQuestionString(q.getQuestionString());
             dtoToAdd.setAnswers(answersFromQuestion);
             dtoToAdd.setTopic(q.getTopic().getName());
