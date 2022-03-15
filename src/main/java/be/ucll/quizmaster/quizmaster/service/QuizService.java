@@ -78,7 +78,7 @@ public class QuizService {
             throw new IllegalArgumentException("no quiz with code '" + quizCode + "'");
         }
 
-        Quiz quizToJoin = quizRepo.getByCode(quizCode);
+        Quiz quizToJoin = getQuizByCode(quizCode);
 
         if (candidateToJoin.equals(quizToJoin.getHost())){
             throw new IllegalArgumentException("nice try ;) the host can not join his own quiz");
@@ -143,6 +143,11 @@ public class QuizService {
         }
         logger.debug("quiz code is " + code);
         return code;
+    }
+
+
+    public Quiz getQuizByCode(String quizCode) {
+        return quizRepo.getByCode(quizCode).orElseThrow(() -> new IllegalArgumentException("not quiz with code: " + quizCode));
     }
 
 
