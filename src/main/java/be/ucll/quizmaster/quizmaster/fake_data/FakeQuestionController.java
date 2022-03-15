@@ -2,16 +2,13 @@ package be.ucll.quizmaster.quizmaster.fake_data;
 
 import be.ucll.quizmaster.quizmaster.controller.dto.ChooseQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
-import liquibase.pro.packaged.Q;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
