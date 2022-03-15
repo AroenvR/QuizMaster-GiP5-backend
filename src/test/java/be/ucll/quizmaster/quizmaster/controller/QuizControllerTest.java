@@ -4,7 +4,10 @@ import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
+import be.ucll.quizmaster.quizmaster.service.QuizService;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -12,20 +15,20 @@ import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class QuizControllerTest extends AbstractIntegrationTesting {
-    String topic = "Quizzes";
+
+    private final Logger logger = LoggerFactory.getLogger(QuizControllerTest.class);
 
     @Test
     void createQuiz() throws Exception {
+        String topic = "Quizzes";
+
         List<String> answers1 = new ArrayList<>();
         answers1.add("1");
         answers1.add("2");
@@ -133,19 +136,27 @@ class QuizControllerTest extends AbstractIntegrationTesting {
         List<QuestionDTO> questions = oM.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<QuestionDTO>>() {});
 
         //get question ID's
-        Set<Integer> questionIds = new HashSet<>();
-//        questionIds.add();
+        Set<Long> questionIds = new HashSet<>();
+        for (QuestionDTO question: questions) {
+            questionIds.add(question.getQuestionId());
+        }
 
+        logger.error("HERE !!!!!!!!!!!!!!!!!!!  -----> " + questionIds);
+
+        //Create quiz
         CreateQuizDTO quizDTO = new CreateQuizDTO.Builder()
                 .quizTitle("TESTQUIZ")
-                .startTime(LocalDateTime.MIN)
-                .endTime(LocalDateTime.MAX)
-//                .questionIds(questionIds)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusDays(10))
+                .questionIds(questionIds)
                 .build();
 
+        logger.error("HERE !!!!!!!!!!!!!!!!!!!  -----> " + quizDTO);
+
+        // Post quiz
         MvcResult mvcPostQuiz = mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                    .content(toJson(question5))
+                    .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
+                    .content(toJson(quizDTO))
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
