@@ -2,31 +2,40 @@ package be.ucll.quizmaster.quizmaster.controller.dto;
 
 public class QuizDTO {
 
-    private String title;
+    private String quizTitle;
 
-    private String hostName;
-
-    public QuizDTO(String title, String hostName) {
-        this.title = title;
-        this.hostName = hostName;
-    }
+    private String quizCode;
 
     public QuizDTO() {
     }
 
-    public String getTitle() {
-        return title;
+    public QuizDTO(String quizTitle, String quizCode) {
+        this.quizTitle = quizTitle;
+        this.quizCode = quizCode;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getQuizTitle() {
+        return quizTitle;
     }
 
-    public String getHostName() {
-        return hostName;
+    public void setQuizTitle(String quizTitle) {
+        this.quizTitle = quizTitle;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+    public String getQuizCode() {
+        return quizCode;
     }
+
+    public void setQuizCode(String quizCode) {
+        this.quizCode = quizCode;
+    }
+
+    @Override
+    public String toString() {
+        return "QuizDTO{" +
+                "quizTitle='" + quizTitle + '\'' +
+                ", quizCode='" + quizCode + '\'' +
+                '}';
+    }
+
 }

@@ -1,7 +1,6 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
-import be.ucll.quizmaster.quizmaster.controller.dto.QuizDTO;
 import be.ucll.quizmaster.quizmaster.service.QuizService;
 import be.ucll.quizmaster.quizmaster.service.exceptions.NotAuthenticatedException;
 import org.slf4j.Logger;
@@ -43,9 +42,7 @@ public class QuizController {
 
         logger.debug("JOIN quiz called.");
         try {
-            ResponseEntity<QuizDTO> response = ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
-            logger.debug(response.toString());
-            return response;
+            return ResponseEntity.status(HttpStatus.CREATED).body(quizService.joinQuiz(code));
         } catch (NotAuthenticatedException e) {
             logger.info(e.toString());
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -57,6 +54,28 @@ public class QuizController {
             logger.debug(body.toString());
             return body;
         }
+
+    }
+
+
+    @GetMapping("/played")
+    private ResponseEntity<?> getAllFinishedQuizzes() {
+
+        logger.debug("GET finished quizzes called.");
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(quizService.getFinishedQuizzes());
+        } catch (NotAuthenticatedException e) {
+            logger.info(e.toString());
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            logger.debug(response.toString());
+            return response;
+        } catch (Exception e) {
+            logger.info(e.toString());
+            ResponseEntity<String> body = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            logger.debug(body.toString());
+            return body;
+        }
+
 
     }
 

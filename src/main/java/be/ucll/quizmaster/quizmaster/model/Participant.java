@@ -17,7 +17,7 @@ public class Participant {
     @Column(name = "finished")
     private boolean finished;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 

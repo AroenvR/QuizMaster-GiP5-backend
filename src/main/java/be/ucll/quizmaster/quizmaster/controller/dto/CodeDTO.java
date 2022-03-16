@@ -7,7 +7,6 @@ public class CodeDTO {
     public CodeDTO() {
     }
 
-
     public CodeDTO(String quizCode) {
         this.quizCode = quizCode;
     }

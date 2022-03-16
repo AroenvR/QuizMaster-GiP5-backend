@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ParticipantRepo extends JpaRepository<Participant, Long> {
@@ -21,5 +22,6 @@ public interface ParticipantRepo extends JpaRepository<Participant, Long> {
 
     Optional<Participant> getParticipantByMemberAndQuiz(Member member, Quiz quiz);
 
+    Set<Participant> getAllByMember(Member member);
 
 }

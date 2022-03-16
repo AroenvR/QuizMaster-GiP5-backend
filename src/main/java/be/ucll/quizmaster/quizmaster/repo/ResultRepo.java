@@ -3,7 +3,6 @@ package be.ucll.quizmaster.quizmaster.repo;
 import be.ucll.quizmaster.quizmaster.model.Participant;
 import be.ucll.quizmaster.quizmaster.model.QuizQuestion;
 import be.ucll.quizmaster.quizmaster.model.Result;
-import liquibase.pro.packaged.P;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

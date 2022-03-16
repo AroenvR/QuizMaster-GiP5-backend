@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.model;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -61,6 +62,8 @@ public class Member {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ParticipantService {
@@ -58,6 +59,12 @@ public class ParticipantService {
                 () -> new EntityNotFoundException(
                         "no participation found"
         ));
+
+    }
+
+    public Set<Participant> getAllParticipations(Member member) {
+
+        return participantRepo.getAllByMember(member);
 
     }
 }

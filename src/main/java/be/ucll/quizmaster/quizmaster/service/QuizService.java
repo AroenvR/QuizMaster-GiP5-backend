@@ -4,6 +4,7 @@ package be.ucll.quizmaster.quizmaster.service;
 import be.ucll.quizmaster.quizmaster.controller.dto.CodeDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuizDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuizDTO;
+import be.ucll.quizmaster.quizmaster.controller.dto.QuizJoinedDTO;
 import be.ucll.quizmaster.quizmaster.model.Member;
 import be.ucll.quizmaster.quizmaster.model.Participant;
 import be.ucll.quizmaster.quizmaster.model.Quiz;
@@ -15,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class QuizService {
@@ -70,17 +70,17 @@ public class QuizService {
 
 
     @Transactional
-    public QuizDTO joinQuiz(String quizCode) throws NotAuthenticatedException {
+    public QuizJoinedDTO joinQuiz(String quizCode) throws NotAuthenticatedException {
 
         Member candidateToJoin = loginService.getLoggedInMember("Not authenticated. only members can join a quiz.");
 
-        if (!quizRepo.existsByCode(quizCode)){
+        if (!quizRepo.existsByCode(quizCode)) {
             throw new IllegalArgumentException("no quiz with code '" + quizCode + "'");
         }
 
         Quiz quizToJoin = getQuizByCode(quizCode);
 
-        if (candidateToJoin.equals(quizToJoin.getHost())){
+        if (candidateToJoin.equals(quizToJoin.getHost())) {
             throw new IllegalArgumentException("nice try ;) the host can not join his own quiz");
         }
 
@@ -96,7 +96,7 @@ public class QuizService {
         Participant saved = participantService.saveParticipation(participation);
         logger.debug("SAVED: " + saved);
 
-        QuizDTO response = new QuizDTO(saved.getQuiz().getTitle(), saved.getQuiz().getHost().getUsername());
+        QuizJoinedDTO response = new QuizJoinedDTO(saved.getQuiz().getTitle(), saved.getQuiz().getHost().getUsername());
         logger.debug("Response:" + response);
         return response;
 
@@ -138,7 +138,7 @@ public class QuizService {
         code += base.substring(14, 15);
         code += base.substring(19, 20);
         code += base.substring(24, 27);
-        if (quizRepo.existsByCode(code)){
+        if (quizRepo.existsByCode(code)) {
             return createQuizCode();
         }
         logger.debug("quiz code is " + code);
@@ -151,4 +151,27 @@ public class QuizService {
     }
 
 
+    public Set<QuizDTO> getFinishedQuizzes() throws NotAuthenticatedException {
+
+        Set<QuizDTO> response = new HashSet<>();
+
+        Member member = loginService.getLoggedInMember("Not authenticated. only members can get there results.");
+
+        Set<Participant> participations;
+        try {
+            participations = participantService.getAllParticipations(member);
+            for (Participant p : participations) {
+                if (p.isFinished()){
+                    QuizDTO q = new QuizDTO(p.getQuiz().getTitle(), p.getQuiz().getCode());
+                    response.add(q);
+                    logger.debug(member.getUsername() + "played in quiz \"" + q.getQuizTitle() + "\" with code \"" + q.getQuizCode() + "\"");
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to get the quizzes you played. Try again later.");
+        }
+
+        return response;
+    }
 }
