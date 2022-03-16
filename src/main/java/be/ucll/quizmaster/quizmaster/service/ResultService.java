@@ -96,6 +96,9 @@ public class ResultService {
             throw new IllegalArgumentException("you need to finish a quiz before you can get your result.");
         }
 
+        if (!participantService.participationHasValidResult(participation)){
+            throw new IllegalArgumentException("you did not answer a question in this quiz.");
+        }
 
         FeedbackDTO response = new FeedbackDTO.Builder()
                 .totalAnswers(resultRepo.questionsAsked(participation.getParticipantionId()))
@@ -111,6 +114,7 @@ public class ResultService {
         return response;
 
     }
+
 
     private int getPlaceInQuiz(String username, Quiz quiz) {
         int place = 1;
@@ -167,5 +171,8 @@ public class ResultService {
         int secondsTaken = resultRepo.getSecondsTaken(participation.getParticipantionId());
         return (secondsTaken - secondsTaken % 60) / 60;
     }
+
+
+
 
 }

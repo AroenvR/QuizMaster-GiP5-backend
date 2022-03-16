@@ -84,12 +84,14 @@ public class QuizService {
             throw new IllegalArgumentException("nice try ;) the host can not join his own quiz");
         }
 
+
+        if (participantService.isAlreadyInThisQuiz(candidateToJoin, quizToJoin)) {
+            throw new IllegalArgumentException("You can only participate once in a quiz");
+        }
+
         if (participantService.isAlreadyInQuizAndNotFinished(candidateToJoin)) {
-            if (participantService.isAlreadyInThisQuiz(candidateToJoin, quizToJoin)) {
-                throw new IllegalArgumentException("You can only participate once in a quiz");
-            } else {
-                participantService.setCurrentQuizFinished(candidateToJoin);
-            }
+            participantService.setCurrentQuizFinished(candidateToJoin);
+
         }
 
         Participant participation = new Participant(candidateToJoin, quizToJoin);
@@ -162,7 +164,8 @@ public class QuizService {
             participations = participantService.getAllParticipations(member);
 
             for (Participant p : participations) {
-                if (p.isFinished()){
+                if (p.isFinished() && participantService.participationHasValidResult(p)) {
+
                     QuizDTO q = new QuizDTO(p.getQuiz().getTitle(), p.getQuiz().getCode());
                     response.add(q);
                     logger.debug(member.getUsername() + "played in quiz \"" + q.getQuizTitle() + "\" with code \"" + q.getQuizCode() + "\"");
@@ -173,7 +176,7 @@ public class QuizService {
             throw new RuntimeException("Unable to get the quizzes you played. Try again later.");
         }
 
-        if (response.size() == 0){
+        if (response.size() == 0) {
             throw new IllegalArgumentException("You need to complete a quiz before you can get your results");
 
         }

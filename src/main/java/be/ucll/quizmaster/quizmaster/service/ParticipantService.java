@@ -67,4 +67,11 @@ public class ParticipantService {
         return participantRepo.getAllByMember(member);
 
     }
+
+    public boolean participationHasValidResult(Participant participation) {
+        if (participation.getResults().get(0).getEndTime() == null) {
+            return false;
+        }
+        return true;
+    }
 }
