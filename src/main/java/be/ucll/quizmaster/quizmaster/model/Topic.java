@@ -25,7 +25,6 @@ public class Topic {
         this.name = name;
     }
 
-
     public long getTopicId() {
         return topicId;
     }

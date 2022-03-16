@@ -71,6 +71,7 @@ public class QuestionService {
         setAnswersInRecievedQuestion(toSave, dto.getAnswers());
 
         Question saved = questionRepo.save(toSave);
+
         logger.info("SAVED: " + saved.toString());
         return new CreateQuestionDTO(saved.getQuestionId(), dto);
 
@@ -151,7 +152,6 @@ public class QuestionService {
         logger.debug("next question = " + nextQuestion.toString());
 
         return nextQuestion;
-
     }
 
     public List<QuestionDTO> getQuestionsByTopic(String topic) throws NotAuthenticatedException {

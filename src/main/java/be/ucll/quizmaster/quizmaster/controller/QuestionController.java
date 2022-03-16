@@ -60,7 +60,7 @@ public class QuestionController {
         } catch (Exception e) {
             logger.warn(e.toString());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(e.getMessage());
         }
 
     }
