@@ -19,7 +19,7 @@ public interface ParticipantRepo extends JpaRepository<Participant, Long> {
     Optional<Participant> getParticipantByMemberAndFinishedIsFalse(Member member);
 
 
-    Optional<Participant> getParticipantByMemberAndQuiz(Quiz quiz, Member member);
+    Optional<Participant> getParticipantByMemberAndQuiz(Member member, Quiz quiz);
 
 
 }

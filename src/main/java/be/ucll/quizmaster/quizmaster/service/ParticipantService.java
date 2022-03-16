@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -53,11 +54,10 @@ public class ParticipantService {
 
     public Participant getParticipation(Quiz quiz, Member member) {
 
-        return participantRepo.getParticipantByMemberAndQuiz(quiz, member).orElseThrow(
-                () -> new IllegalArgumentException(
-                        "no participation for member " + member.getUsername() + " in quiz " + quiz.getTitle()
-                )
-        );
+        return participantRepo.getParticipantByMemberAndQuiz(member, quiz).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "no participation found"
+        ));
 
     }
 }

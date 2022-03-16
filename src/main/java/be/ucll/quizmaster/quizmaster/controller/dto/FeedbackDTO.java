@@ -8,7 +8,9 @@ public class FeedbackDTO {
 
     private int totalAnswers;
 
-    private String timeTaken;
+    private int minutesTaken;
+
+    private int secondsTaken;
 
     private int place;
 
@@ -20,10 +22,12 @@ public class FeedbackDTO {
     private FeedbackDTO(Builder builder) {
         setAnswersCorrect(builder.answersCorrect);
         setTotalAnswers(builder.totalAnswers);
-        setTimeTaken(builder.timeTaken);
+        setMinutesTaken(builder.minutesTaken);
+        setSecondsTaken(builder.secondsTaken);
         setPlace(builder.place);
         setTopTen(builder.topTen);
     }
+
 
     public int getAnswersCorrect() {
         return answersCorrect;
@@ -41,12 +45,20 @@ public class FeedbackDTO {
         this.totalAnswers = totalAnswers;
     }
 
-    public String getTimeTaken() {
-        return timeTaken;
+    public int getMinutesTaken() {
+        return minutesTaken;
     }
 
-    public void setTimeTaken(String timeTaken) {
-        this.timeTaken = timeTaken;
+    public void setMinutesTaken(int minutesTaken) {
+        this.minutesTaken = minutesTaken;
+    }
+
+    public int getSecondsTaken() {
+        return secondsTaken;
+    }
+
+    public void setSecondsTaken(int secondsTaken) {
+        this.secondsTaken = secondsTaken;
     }
 
     public int getPlace() {
@@ -68,7 +80,8 @@ public class FeedbackDTO {
     public static final class Builder {
         private int answersCorrect;
         private int totalAnswers;
-        private String timeTaken;
+        private int minutesTaken;
+        private int secondsTaken;
         private int place;
         private List<String> topTen;
 
@@ -85,8 +98,13 @@ public class FeedbackDTO {
             return this;
         }
 
-        public Builder timeTaken(String val) {
-            timeTaken = val;
+        public Builder minutesTaken(int val) {
+            minutesTaken = val;
+            return this;
+        }
+
+        public Builder secondsTaken(int val) {
+            secondsTaken = val;
             return this;
         }
 
@@ -103,5 +121,18 @@ public class FeedbackDTO {
         public FeedbackDTO build() {
             return new FeedbackDTO(this);
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return "FeedbackDTO{" +
+                "answersCorrect=" + answersCorrect +
+                ", totalAnswers=" + totalAnswers +
+                ", minutesTaken=" + minutesTaken +
+                ", secondsTaken=" + secondsTaken +
+                ", place=" + place +
+                ", topTen=" + topTen +
+                '}';
     }
 }

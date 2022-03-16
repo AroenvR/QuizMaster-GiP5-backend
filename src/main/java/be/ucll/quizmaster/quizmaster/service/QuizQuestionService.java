@@ -2,6 +2,7 @@ package be.ucll.quizmaster.quizmaster.service;
 
 import be.ucll.quizmaster.quizmaster.model.*;
 import be.ucll.quizmaster.quizmaster.repo.QuestionRepo;
+import be.ucll.quizmaster.quizmaster.repo.ResultRepo;
 import be.ucll.quizmaster.quizmaster.service.exceptions.QuizFinishedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

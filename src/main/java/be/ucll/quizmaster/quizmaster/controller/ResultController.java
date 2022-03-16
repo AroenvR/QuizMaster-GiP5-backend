@@ -23,21 +23,6 @@ public class ResultController {
         this.resultService = resultService;
     }
 
-    @GetMapping("/host")
-    private ResponseEntity<?> getAllResultsForQuiz(@RequestParam(name = "code") String code){
-        logger.debug("GET All Results For Quiz Called. -> " + code);
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(resultService.getAllResultsForQuiz(code));
-        } catch (NotAuthenticatedException e) {
-            logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (Exception e) {
-            logger.info(e.toString());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-
-    }
-
     @GetMapping
     private ResponseEntity<?> getResult(@RequestParam(name = "code") String code){
         logger.debug("GET Result For Quiz Called ->." + code);
