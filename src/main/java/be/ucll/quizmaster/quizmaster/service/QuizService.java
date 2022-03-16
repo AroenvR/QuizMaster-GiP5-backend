@@ -160,6 +160,7 @@ public class QuizService {
         Set<Participant> participations;
         try {
             participations = participantService.getAllParticipations(member);
+
             for (Participant p : participations) {
                 if (p.isFinished()){
                     QuizDTO q = new QuizDTO(p.getQuiz().getTitle(), p.getQuiz().getCode());
@@ -170,6 +171,11 @@ public class QuizService {
 
         } catch (Exception e) {
             throw new RuntimeException("Unable to get the quizzes you played. Try again later.");
+        }
+
+        if (response.size() == 0){
+            throw new IllegalArgumentException("You need to complete a quiz before you can get your results");
+
         }
 
         return response;

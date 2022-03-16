@@ -31,7 +31,7 @@ public interface ResultRepo extends JpaRepository<Result, Long> {
     @Query(value = "SELECT SUM(time_taken_question.TimeTakenForQuestion)\n" +
             "FROM (SELECT extract(SECOND from end_time - start_time) + (extract(MIN from end_time - start_time) * 60 ) AS TimeTakenForQuestion\n" +
             "        FROM quiz_master.result\n" +
-            "        WHERE participant_id = 63\n" +
+            "        WHERE participant_id = :participationId\n" +
             "        AND end_time IS NOT NULL) time_taken_question\n" +
             "\n", nativeQuery = true)
     int getSecondsTaken(@Param("participationId") long participationId);

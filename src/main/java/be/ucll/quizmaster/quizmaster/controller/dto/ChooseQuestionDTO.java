@@ -19,6 +19,7 @@ public class ChooseQuestionDTO {
     private String description;
 
 
+    @SuppressWarnings("unused")
     public ChooseQuestionDTO() {
     }
 

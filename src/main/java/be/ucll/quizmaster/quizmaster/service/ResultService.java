@@ -92,7 +92,7 @@ public class ResultService {
 
         Participant participation = participantService.getParticipation(quizPlayed, loggedInMember);
 
-        if (!participation.isFinished()) {
+        if (!participation.isFinished() || participation.getResults().size() == 0) {
             throw new IllegalArgumentException("you need to finish a quiz before you can get your result.");
         }
 
