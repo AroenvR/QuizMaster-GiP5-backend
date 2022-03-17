@@ -14,6 +14,7 @@
     <name>QuizMaster</name>
     <description>QuizMaster</description>
     <properties>
+        <start-class>be.ucll.quizmaster.quizmaster.QuizMasterApplication</start-class>
         <java.version>11</java.version>
     </properties>
     <dependencies>
@@ -75,7 +76,8 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>.
+                <artifactId>spring-boot-maven-plugin</artifactId>
+
             </plugin>
         </plugins>
     </build>
