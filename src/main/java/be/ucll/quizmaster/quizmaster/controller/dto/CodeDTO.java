@@ -1,5 +1,5 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
-
+@SuppressWarnings("unused")
 public class CodeDTO {
 
     private String quizCode;

@@ -3,13 +3,12 @@ package be.ucll.quizmaster.quizmaster;
 import be.ucll.quizmaster.quizmaster.controller.dto.MemberDTO;
 import be.ucll.quizmaster.quizmaster.repo.MemberRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -29,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @ActiveProfiles("")
 public abstract class AbstractIntegrationTesting {
+
+    private final Logger logger = LoggerFactory.getLogger(AbstractIntegrationTesting.class);
 
     protected MockMvc mockMvc;
     private MvcResult mvcPost;
@@ -117,9 +118,14 @@ public abstract class AbstractIntegrationTesting {
         }
     }
 
-    public static <T> T fromMvcResult(MvcResult result, Class<T> clazz) {
+    public <T> T fromMvcResult(MvcResult result, Class<T> clazz) {
         try {
-            return new ObjectMapper().readValue(result.getResponse().getContentAsString(), clazz);
+
+            String response = result.getResponse().getContentAsString();
+            logger.debug(response);
+            T t = new ObjectMapper().readValue(response, clazz);
+
+            return t;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
