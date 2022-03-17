@@ -1,6 +1,7 @@
 package be.ucll.quizmaster.quizmaster.controller;
 
 import be.ucll.quizmaster.quizmaster.AbstractIntegrationTesting;
+import be.ucll.quizmaster.quizmaster.controller.dto.AnswerDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.CreateQuestionDTO;
 import be.ucll.quizmaster.quizmaster.controller.dto.QuestionDTO;
 import be.ucll.quizmaster.quizmaster.model.Question;
@@ -106,7 +107,6 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
     }
 
     @Test
-    @DisplayName("tests bad request, here with inappropriate type")
     void createQuestionBadRequest() throws Exception {
         List<String> answers3 = new ArrayList<>();
         answers3.add("vraag");
@@ -128,7 +128,6 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
     }
 
     @Test
-    @DisplayName("tests unauthorized member")
     void createQuestionUnauthorizedMember() throws Exception {
         List<String> answer = new ArrayList<>();
         answer.add("vraag");
@@ -153,7 +152,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     @Test
     void getNextQuestionWeb() throws Exception {
-        //TODO build quiz to check
+
         String topic = "Quizzes";
         List<String> answers1 = new ArrayList<>();
         answers1.add("1");
@@ -218,9 +217,8 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 .andExpect(status().isOk())
                 .andReturn();
 
-      //  QuestionDTO questionDTO = fromMvcResult(mvcResult,QuestionDTO.class);
-
-    }
+       // QuestionDTO questionDTO = fromMvcResult(mvcResult,QuestionDTO.class);
+           }
 
     @Test
     void getNextQuestionWebWithoutQuiz() throws Exception {
@@ -236,8 +234,73 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
     }
 
     @Test
-    void getNextQuestionMobile() {
-        //TODO build quiz to check
+    void getNextQuestionMobile() throws Exception {
+        String topic = "Quizzes";
+        List<String> answers1 = new ArrayList<>();
+        answers1.add("1");
+        answers1.add("2");
+        answers1.add("3");
+        answers1.add("4");
+
+        CreateQuestionDTO question1 = new CreateQuestionDTO.Builder()
+                .questionString("Welke vraag is dit?")
+                .description("Multiple Choice.")
+                .topic(topic)
+                .type(1)
+                .answersDTOs(answers1)
+                .build();
+
+        MvcResult mvcPost1 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
+                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
+                        .content(toJson(question1))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        List<String> answers2 = new ArrayList<>();
+        answers2.add("false");
+
+        CreateQuestionDTO question2 = new CreateQuestionDTO.Builder()
+                .questionString("Is dit vraag 2?")
+                .description("True or False.")
+                .topic(topic)
+                .type(2)
+                .answersDTOs(answers2)
+                .build();
+
+        MvcResult mvcPost2 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
+                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
+                        .content(toJson(question2))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        List<String> answers3 = new ArrayList<>();
+        answers3.add("vraag");
+
+        CreateQuestionDTO question3 = new CreateQuestionDTO.Builder()
+                .questionString("Dit is _____ 3!")
+                .description("Complete the statement")
+                .topic(topic)
+                .type(3)
+                .answersDTOs(answers3)
+                .build();
+
+        MvcResult mvcPost3 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
+                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
+                        .content(toJson(question3))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        AnswerDTO answerDTO = new AnswerDTO(question2.getAnswers().get(0));
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/questions/mobile"+answerDTO)
+                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
+
+                )
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
@@ -390,73 +453,4 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     }
 
-    // TODO validation checks in order to simulate exceptions
-    @Test
-    void getAllForNonExistingTopic() throws Exception {
-        String topic = "Quizzes";
-
-        List<String> answers1 = new ArrayList<>();
-        answers1.add("1");
-        answers1.add("2");
-        answers1.add("3");
-        answers1.add("4");
-
-        CreateQuestionDTO question1 = new CreateQuestionDTO.Builder()
-                .questionString("Welke vraag is dit?")
-                .description("Multiple Choice.")
-                .topic(topic)
-                .type(1)
-                .answersDTOs(answers1)
-                .build();
-
-        MvcResult mvcPost1 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                        .content(toJson(question1))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        List<String> answers2 = new ArrayList<>();
-        answers2.add("false");
-
-        CreateQuestionDTO question2 = new CreateQuestionDTO.Builder()
-                .questionString("Is dit vraag 2?")
-                .description("True or False.")
-                .topic(topic)
-                .type(2)
-                .answersDTOs(answers2)
-                .build();
-
-        MvcResult mvcPost2 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                        .content(toJson(question2))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        List<String> answers3 = new ArrayList<>();
-        answers3.add("vraag");
-
-        CreateQuestionDTO question3 = new CreateQuestionDTO.Builder()
-                .questionString("Dit is _____ 3!")
-                .description("Complete the statement")
-                .topic(topic)
-                .type(3)
-                .answersDTOs(answers3)
-                .build();
-
-        MvcResult mvcPost3 = mockMvc.perform(MockMvcRequestBuilders.post("/questions")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                        .content(toJson(question3))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/questions/" + "nonexistingTopic")
-                        .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
-                )
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-    }
 }
