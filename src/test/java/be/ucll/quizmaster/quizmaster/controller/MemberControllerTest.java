@@ -50,10 +50,4 @@ class MemberControllerTest extends AbstractIntegrationTesting {
         //assertEquals(encoder.encode(newMember.getPassword()), dbMember.getPassword());
     }
 
-    @Test
-    void getMemberById() {
-        //todo method still returns null
-    }
-
-
 }

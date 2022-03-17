@@ -23,10 +23,6 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    public ResponseEntity<MemberDTO> getMemberById(){
-        return null;
-    }
-
     @PostMapping()
     public ResponseEntity<?> createMember(@RequestBody MemberDTO dto){
         try {
