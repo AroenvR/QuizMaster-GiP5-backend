@@ -73,7 +73,7 @@ public class QuestionController {
 
     @GetMapping("/{topic}")
     public ResponseEntity<?> getAllForTopic(@PathVariable String topic) {
-        logger.error("Requested topic: " + topic);
+        logger.debug("Requested topic: " + topic);
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getQuestionsByTopic(topic));

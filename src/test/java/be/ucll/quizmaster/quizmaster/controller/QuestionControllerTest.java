@@ -216,6 +216,13 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 )
                 .andExpect(status().isOk())
                 .andReturn();
+/*
+
+        logger.debug(mvcResult.toString());
+        QuestionDTO questionDTO = fromMvcResult(mvcResult, QuestionDTO.class);
+
+        assertEquals(questionDTO.getQuestionString(), question3.getQuestionString());
+*/
 
        // QuestionDTO questionDTO = fromMvcResult(mvcResult,QuestionDTO.class);
            }

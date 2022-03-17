@@ -1,9 +1,8 @@
 package be.ucll.quizmaster.quizmaster.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class ChooseQuestionDTO {
 
     private long questionId;
