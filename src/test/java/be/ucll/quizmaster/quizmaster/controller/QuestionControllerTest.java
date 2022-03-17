@@ -107,7 +107,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     @Test
     @DisplayName("tests bad request, here with inappropriate type")
-    void badCreateQuestion400() throws Exception {
+    void createQuestionBadRequest() throws Exception {
         List<String> answers3 = new ArrayList<>();
         answers3.add("vraag");
 
@@ -129,7 +129,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     @Test
     @DisplayName("tests unauthorized member")
-    void badCreateQuestion401() throws Exception {
+    void createQuestionUnauthorizedMember() throws Exception {
         List<String> answer = new ArrayList<>();
         answer.add("vraag");
 
@@ -217,6 +217,8 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                 )
                 .andExpect(status().isOk())
                 .andReturn();
+
+      //  QuestionDTO questionDTO = fromMvcResult(mvcResult,QuestionDTO.class);
 
     }
 
@@ -319,7 +321,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
     }
 
     @Test
-    void badGetAllForTopic401() throws Exception {
+    void getAllForTopicUnauthorizedMember() throws Exception {
         String topic = "Quizzes";
 
         List<String> answers1 = new ArrayList<>();
@@ -390,7 +392,7 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
 
     // TODO validation checks in order to simulate exceptions
     @Test
-    void badGetAllForTopic400() throws Exception {
+    void getAllForNonExistingTopic() throws Exception {
         String topic = "Quizzes";
 
         List<String> answers1 = new ArrayList<>();
@@ -449,7 +451,6 @@ class QuestionControllerTest extends AbstractIntegrationTesting {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
-
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/questions/" + "nonexistingTopic")
                         .with(httpBasic(oderick.getEmail(), oderick.getPassword()))
